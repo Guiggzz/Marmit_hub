@@ -1,16 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        <script src="https://cdn.tailwindcss.com"></script>
         {% block stylesheets %}
         {% endblock %}
+    </head>
+    <body class="bg-gray-100">
+        <header class="bg-white shadow-md">
+            <div class="container mx-auto flex justify-between items-center py-4 px-6">
+                <a href="/" class="text-orange-600 text-2xl font-bold">
+                    Marmit-hub
+                </a>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="/recettes" class="text-gray-700 hover:text-orange-600 transition">
+                        Recettes
+                    </a>
+                    <a href="/recette/nouvelle" class="text-gray-700 hover:text-orange-600 transition">
+                        Ajout de recette
+                    </a>
+                    <a href="/videos" class="text-gray-700 hover:text-orange-600 transition">
+                        Ajout d'ingrédient
+                    </a>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    <a href="/search" class="text-gray-700 hover:text-orange-600 text-xl transition">
+                        🔍
+                    </a>
+                    <a href="/login" class="text-gray-700 hover:text-orange-600 text-xl transition">
+                        👤
+                    </a>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-700 hover:text-orange-600 text-2xl transition">
+                        ☰
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden">
+                <nav class="space-y-2 bg-gray-50 px-6 py-4">
+                    <a href="/recipes" class="block text-gray-700 hover:text-orange-600 transition">
+                        Recettes
+                    </a>
+                    <a href="/seasonal" class="block text-gray-700 hover:text-orange-600 transition">
+                        De Saison
+                    </a>
+                    <a href="/videos" class="block text-gray-700 hover:text-orange-600 transition">
+                        Vidéos
+                    </a>
+                </nav>
+            </div>
+        </header>
 
+        {% block body %}{% endblock %}
+
+        <script>
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        </script>
         {% block javascripts %}
         {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
     </body>
 </html>

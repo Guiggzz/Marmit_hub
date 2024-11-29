@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -49,6 +51,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->username = $username;
 
         return $this;
+    }
+
+    #[ORM\OneToMany(mappedBy: "utilisateur", targetEntity: Recette::class)]
+    private Collection $recettes;
+
+    #[ORM\OneToMany(mappedBy: "utilisateur", targetEntity: Ingredient::class)]
+    private Collection $ingredients;
+
+    /**
+     * @var Collection<int, Ingredient>
+     */
+    #[ORM\OneToMany(targetEntity: Ingredient::class, mappedBy: 'uilisateur_id')]
+    private Collection $user_id_ingredients;
+
+    /**
+     * @var Collection<int, Recette>
+     */
+    #[ORM\OneToMany(targetEntity: Recette::class, mappedBy: 'utilisateur_id', orphanRemoval: true)]
+    private Collection $user_recette;
+
+    public function __construct()
+    {
+        $this->recettes = new ArrayCollection();
+        $this->ingredients = new ArrayCollection();
+        $this->user_id_ingredients = new ArrayCollection();
+        $this->user_recette = new ArrayCollection();
     }
 
     /**
@@ -107,5 +135,65 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Ingredient>
+     */
+    public function getUserIdIngredients(): Collection
+    {
+        return $this->user_id_ingredients;
+    }
+
+    public function addUserIdIngredient(Ingredient $userIdIngredient): static
+    {
+        if (!$this->user_id_ingredients->contains($userIdIngredient)) {
+            $this->user_id_ingredients->add($userIdIngredient);
+            $userIdIngredient->setUilisateurId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserIdIngredient(Ingredient $userIdIngredient): static
+    {
+        if ($this->user_id_ingredients->removeElement($userIdIngredient)) {
+            // set the owning side to null (unless already changed)
+            if ($userIdIngredient->getUilisateurId() === $this) {
+                $userIdIngredient->setUilisateurId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recette>
+     */
+    public function getUserRecette(): Collection
+    {
+        return $this->user_recette;
+    }
+
+    public function addUserRecette(Recette $userRecette): static
+    {
+        if (!$this->user_recette->contains($userRecette)) {
+            $this->user_recette->add($userRecette);
+            $userRecette->setUtilisateurId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserRecette(Recette $userRecette): static
+    {
+        if ($this->user_recette->removeElement($userRecette)) {
+            // set the owning side to null (unless already changed)
+            if ($userRecette->getUtilisateurId() === $this) {
+                $userRecette->setUtilisateurId(null);
+            }
+        }
+
+        return $this;
     }
 }

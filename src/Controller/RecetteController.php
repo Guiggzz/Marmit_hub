@@ -66,8 +66,11 @@ class RecetteController extends AbstractController
     #[Route('/recette/{id}', name: 'recette_show')]
 public function show(Recette $recette): Response
 {
-    // Aucune restriction d'accès, tout le monde peut voir la recette
+    // Récupération de l'utilisateur qui a créé la recette
+    $utilisateur = $recette->getUtilisateur(); 
+
     return $this->render('recette/show.html.twig', [
         'recette' => $recette,
+        'utilisateur' => $utilisateur, // Passer l'utilisateur à la vue
     ]);
 }}

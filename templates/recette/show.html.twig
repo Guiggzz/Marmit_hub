@@ -6,28 +6,40 @@
 <div class="container mx-auto px-6 py-10">
     <h1 class="text-3xl font-bold text-orange-600 mb-6">{{ recette.nom }}</h1>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
         {% if recette.photo %}
             <img 
                 src="{{ asset('uploads/recettes/' ~ recette.photo) }}" 
                 alt="{{ recette.nom }}" 
-                class="w-full h-64 object-cover mb-6"
+                class="w-full h-48 object-cover"
             >
         {% else %}
-            <div class="bg-gray-200 h-64 flex items-center justify-center text-gray-500 mb-6">
+            <div class="bg-gray-200 h-48 flex items-center justify-center text-gray-500">
                 Pas d'image
             </div>
         {% endif %}
 
-        <p class="text-gray-600 text-sm mb-4">⏱️ Durée : {{ recette.dureeTotale }} minutes</p>
-        <p class="text-gray-600 text-sm mb-4">👥 Pour {{ recette.nombrePersonnes }} personne(s)</p>
-        <p class="text-gray-600 text-base">{{ recette.texte }}</p>
+        <div class="p-6">
+            <p class="text-gray-600 text-sm mb-2">⏱️ Durée : {{ recette.dureeTotale }} minutes</p>
+            <p class="text-gray-600 text-sm mb-4">👥 Pour {{ recette.nombrePersonnes }} personne(s)</p>
 
-        <div class="mt-6">
-            <a href="{{ path('app_home') }}" class="inline-block text-orange-600 font-semibold hover:underline">
-                Retour à l'accueil
-            </a>
+            <!-- Afficher le nom de l'utilisateur qui a créé la recette -->
+            <p class="text-gray-600 text-sm mb-4">Créée par : {{ utilisateur.username }}</p>
         </div>
+    </div>
+
+    <div class="mt-6">
+        <h3 class="text-xl font-semibold">Ingrédients</h3>
+        <ul class="list-disc pl-5">
+            {% for ingredient in recette.ingredients %}
+                <li>{{ ingredient.nom }} - {{ ingredient.quantite }}</li>
+            {% else %}
+                <li>Aucun ingrédient spécifié.</li>
+            {% endfor %}
+        </ul>
+
+        <h3 class="text-xl font-semibold mt-4">Instructions</h3>
+        <p>{{ recette.texte }}</p>
     </div>
 </div>
 {% endblock %}

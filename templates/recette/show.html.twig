@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ recette.nom }}{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-6 py-10">
+    <h1 class="text-3xl font-bold text-orange-600 mb-6">{{ recette.nom }}</h1>
+
+    <div class="bg-white rounded-lg shadow-md p-6">
+        {% if recette.photo %}
+            <img 
+                src="{{ asset('uploads/recettes/' ~ recette.photo) }}" 
+                alt="{{ recette.nom }}" 
+                class="w-full h-64 object-cover mb-6"
+            >
+        {% else %}
+            <div class="bg-gray-200 h-64 flex items-center justify-center text-gray-500 mb-6">
+                Pas d'image
+            </div>
+        {% endif %}
+
+        <p class="text-gray-600 text-sm mb-4">⏱️ Durée : {{ recette.dureeTotale }} minutes</p>
+        <p class="text-gray-600 text-sm mb-4">👥 Pour {{ recette.nombrePersonnes }} personne(s)</p>
+        <p class="text-gray-600 text-base">{{ recette.texte }}</p>
+
+        <div class="mt-6">
+            <a href="{{ path('app_home') }}" class="inline-block text-orange-600 font-semibold hover:underline">
+                Retour à l'accueil
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

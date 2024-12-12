@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\Recette;
@@ -45,17 +46,28 @@ class RecetteController extends AbstractController
             }
 
             // Associer l'utilisateur connecté
-            $recette->setUtilisateurid($this->getUser());
+            $recette->setUtilisateur($this->getUser());
 
             $entityManager->persist($recette);
             $entityManager->flush();
 
             $this->addFlash('success', 'Votre recette a été créée avec succès !');
-            return $this->redirectToRoute('app_home', ['id' => $recette->getId()]);
+
+            // Redirection vers la page de la recette nouvellement créée
+            return $this->redirectToRoute('recette_show', ['id' => $recette->getId()]);
         }
 
         return $this->render('recette/nouvelle.html.twig', [
             'form' => $form->createView(),
         ]);
     }
-}
+
+    // Nouvelle méthode pour afficher la fiche d'une recette spécifique
+    #[Route('/recette/{id}', name: 'recette_show')]
+public function show(Recette $recette): Response
+{
+    // Aucune restriction d'accès, tout le monde peut voir la recette
+    return $this->render('recette/show.html.twig', [
+        'recette' => $recette,
+    ]);
+}}

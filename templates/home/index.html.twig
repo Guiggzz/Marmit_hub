@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
+
 {% block title %}Accueil{% endblock %}
+
 {% block body %}
 <div class="container mx-auto px-6 py-10">
     <h1 class="text-3xl font-bold text-orange-600 mb-6">Nos Recettes</h1>
@@ -21,7 +23,7 @@
                     <h5 class="text-xl font-bold text-gray-800 mb-2">{{ recette.nom }}</h5>
                     <p class="text-gray-600 text-sm mb-2">⏱️ Durée : {{ recette.dureeTotale }} minutes</p>
                     <p class="text-gray-600 text-sm mb-4">👥 Pour {{ recette.nombrePersonnes }} personne(s)</p>
-                    <a href="#" class="inline-block text-orange-600 font-semibold hover:underline">
+                    <a href="{{ path('recette_show', {'id': recette.id}) }}" class="inline-block text-orange-600 font-semibold hover:underline">
                         Voir la recette →
                     </a>
                 </div>

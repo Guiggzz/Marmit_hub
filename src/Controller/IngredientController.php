@@ -93,3 +93,4 @@ class IngredientController extends AbstractController
         ]);
     }
 }
+

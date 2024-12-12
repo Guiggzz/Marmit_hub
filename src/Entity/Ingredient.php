@@ -18,17 +18,17 @@ class Ingredient
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\ManyToOne(inversedBy: 'user_id_ingredients')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'ingredients')]
     private ?User $utilisateur = null;
 
     /**
      * @var Collection<int, RecetteIngredient>
      */
-    #[ORM\OneToMany(targetEntity: RecetteIngredient::class, mappedBy: 'ingredient', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'ingredient', targetEntity: RecetteIngredient::class, orphanRemoval: true)]
     private Collection $recetteIngredients;
 
     #[ORM\Column(type: 'string', nullable: true)]
-    private ?string $photo = null;  // Propriété photo ajoutée
+    private ?string $photo = null;
 
     public function __construct()
     {
@@ -45,7 +45,7 @@ class Ingredient
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(string $nom): self
     {
         $this->nom = $nom;
 
@@ -57,7 +57,7 @@ class Ingredient
         return $this->utilisateur;
     }
 
-    public function setUtilisateur(?User $utilisateur): static
+    public function setUtilisateur(?User $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
 
@@ -72,7 +72,7 @@ class Ingredient
         return $this->recetteIngredients;
     }
 
-    public function addRecetteIngredient(RecetteIngredient $recetteIngredient): static
+    public function addRecetteIngredient(RecetteIngredient $recetteIngredient): self
     {
         if (!$this->recetteIngredients->contains($recetteIngredient)) {
             $this->recetteIngredients->add($recetteIngredient);
@@ -82,10 +82,9 @@ class Ingredient
         return $this;
     }
 
-    public function removeRecetteIngredient(RecetteIngredient $recetteIngredient): static
+    public function removeRecetteIngredient(RecetteIngredient $recetteIngredient): self
     {
         if ($this->recetteIngredients->removeElement($recetteIngredient)) {
-            // set the owning side to null (unless already changed)
             if ($recetteIngredient->getIngredient() === $this) {
                 $recetteIngredient->setIngredient(null);
             }
@@ -94,14 +93,12 @@ class Ingredient
         return $this;
     }
 
-    // Getter pour la propriété photo
     public function getPhoto(): ?string
     {
         return $this->photo;
     }
 
-    // Setter pour la propriété photo
-    public function setPhoto(?string $photo): static
+    public function setPhoto(?string $photo): self
     {
         $this->photo = $photo;
 

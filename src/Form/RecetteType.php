@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Form;
 
 use App\Entity\Recette;
@@ -63,33 +62,25 @@ class RecetteType extends AbstractType
             ])
             ->add('photo', FileType::class, [
                 'label' => 'Photo de la recette',
-                'mapped' => false, // Photo n'est pas liée à l'entité Recette
+                'mapped' => false,
                 'required' => false,
                 'constraints' => [
                     new File([
                         'maxSize' => '2M',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                            'image/gif'
-                        ],
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
                         'mimeTypesMessage' => 'Veuillez télécharger une image valide',
-                    ])
+                    ]),
                 ],
                 'attr' => [
                     'class' => 'form-control-file',
                 ],
             ])
-            // Ajouter un champ pour les ingrédients
             ->add('ingredients', EntityType::class, [
-                'class' => Ingredient::class, // Lier à l'entité Ingredient
-                'choice_label' => 'nom', // Afficher le nom de l'ingrédient dans le formulaire
-                'multiple' => true, // Permettre la sélection multiple
-                'expanded' => true, // Utiliser des cases à cocher pour la sélection
-                'label' => 'Sélectionner les ingrédients',
-                'attr' => [
-                    'class' => 'form-check-input',
-                ],
+                'class' => Ingredient::class,
+                'choice_label' => 'nom',
+                'multiple' => true,
+                'expanded' => true,
+                'label' => 'Ingrédients',
             ]);
     }
 

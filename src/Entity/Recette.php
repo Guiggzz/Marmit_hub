@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\RecetteRepository;
@@ -41,9 +40,16 @@ class Recette
     #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'recette', orphanRemoval: true)]
     private Collection $commentaires;
 
+    /**
+     * @var Collection<int, RecetteIngredient>
+     */
+    #[ORM\OneToMany(mappedBy: 'recette', targetEntity: RecetteIngredient::class, orphanRemoval: true)]
+    private Collection $recetteIngredients;
+
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
+        $this->recetteIngredients = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -111,7 +117,6 @@ class Recette
         return $this;
     }
 
-    // Méthodes modifiées pour être plus claires
     public function getUtilisateur(): ?User
     {
         return $this->utilisateur;
@@ -148,6 +153,40 @@ class Recette
             // set the owning side to null (unless already changed)
             if ($commentaire->getRecette() === $this) {
                 $commentaire->setRecette(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ingredient>
+     */
+    public function getIngredients(): Collection
+    {
+        $ingredients = new ArrayCollection();
+        foreach ($this->recetteIngredients as $recetteIngredient) {
+            $ingredients->add($recetteIngredient->getIngredient());
+        }
+        return $ingredients;
+    }
+
+    public function addRecetteIngredient(RecetteIngredient $recetteIngredient): static
+    {
+        if (!$this->recetteIngredients->contains($recetteIngredient)) {
+            $this->recetteIngredients->add($recetteIngredient);
+            $recetteIngredient->setRecette($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecetteIngredient(RecetteIngredient $recetteIngredient): static
+    {
+        if ($this->recetteIngredients->removeElement($recetteIngredient)) {
+            // set the owning side to null (unless already changed)
+            if ($recetteIngredient->getRecette() === $this) {
+                $recetteIngredient->setRecette(null);
             }
         }
 

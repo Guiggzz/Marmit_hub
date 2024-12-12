@@ -6,51 +6,52 @@
 <div class="container mx-auto px-6 py-10">
     <!-- Card principale -->
     <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-        <div class="p-6">
-            <!-- Titre de la recette -->
-            <h1 class="text-3xl font-extrabold text-gray-800 mb-6">{{ recette.nom }}</h1>
-
-            <!-- Contenu de la recette (texte, durée, nombre de personnes) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-6">
-                <div class="flex flex-col space-y-4">
-                    <p class="text-lg text-gray-700">{{ recette.texte }}</p>
-                    <div class="flex items-center space-x-4">
-                        <p class="text-gray-600 font-medium">Durée :</p>
-                        <span class="text-orange-600 font-semibold">{{ recette.dureeTotale }} minutes</span>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <p class="text-gray-600 font-medium">Pour :</p>
-                        <span class="text-orange-600 font-semibold">{{ recette.nombrePersonnes }} personne(s)</span>
-                    </div>
+        <!-- Image en haut, en pleine largeur -->
+        {% if recette.photo %}
+            <div class="relative">
+                <img src="{{ asset('uploads/recettes/' ~ recette.photo) }}" alt="{{ recette.nom }}" 
+                     class="w-full h-64 object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                    <h1 class="text-4xl font-bold text-white drop-shadow-md">{{ recette.nom }}</h1>
                 </div>
+            </div>
+        {% endif %}
 
-                <!-- Photo de la recette (si disponible) -->
-                {% if recette.photo %}
-                    <div class="w-full max-w-sm mx-auto">
-                        <img src="{{ asset('uploads/recettes/' ~ recette.photo) }}" alt="{{ recette.nom }}" class="w-full h-auto rounded-lg shadow-lg">
-                    </div>
-                {% endif %}
+        <!-- Contenu de la recette -->
+        <div class="p-6">
+            <div class="flex flex-col space-y-4">
+                <!-- Texte de la recette -->
+                <p class="text-lg text-gray-700">{{ recette.texte }}</p>
+                
+                <!-- Informations supplémentaires -->
+                <div class="flex items-center space-x-4">
+                    <p class="text-gray-600 font-medium">Durée :</p>
+                    <span class="text-orange-600 font-semibold">{{ recette.dureeTotale }} minutes</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <p class="text-gray-600 font-medium">Pour :</p>
+                    <span class="text-orange-600 font-semibold">{{ recette.nombrePersonnes }} personne(s)</span>
+                </div>
             </div>
 
             <!-- Informations sur le créateur -->
-            <div class="mt-6 mb-10">
+            <div class="mt-6">
                 <p class="text-lg text-gray-600 font-medium">Créateur :</p>
                 <p class="text-gray-800">{{ recette.utilisateur.username }}</p>
             </div>
 
-            <!-- Affichage des ingrédients (si nécessaire) -->
+            <!-- Liste des ingrédients -->
             <div class="mt-10">
                 <h2 class="text-2xl font-semibold text-gray-800 mb-4">Ingrédients :</h2>
                 <ul class="space-y-2">
-                    {# Ajoutez une boucle pour lister les ingrédients ici #}
-                    {# Exemple : #}
+                    {# Liste des ingrédients ici #}
                     {# {% for ingredient in recette.ingredients %} #}
                     {# <li class="text-gray-800">{{ ingredient.nom }}</li> #}
                     {# {% endfor %} #}
                 </ul>
             </div>
 
-            <!-- Bouton de retour à l'accueil -->
+            <!-- Bouton de retour -->
             <div class="mt-6">
                 <a href="{{ path('app_home') }}" class="btn bg-orange-600 text-white px-6 py-3 rounded-md hover:bg-orange-500 transition">
                     Retour à l'accueil

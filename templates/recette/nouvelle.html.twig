@@ -34,12 +34,6 @@
         </div>
 
         <div class="form-group">
-            {{ form_label(form.photo, null, {'label_attr': {'class': 'block text-gray-700 font-semibold mb-2'}}) }}
-            {{ form_widget(form.photo, {'attr': {'class': 'form-control-file'}}) }}
-            {{ form_errors(form.photo) }}
-        </div>
-
-        <div class="form-group">
             <label class="block text-gray-700 font-semibold mb-2">Sélectionner les ingrédients</label>
             <div class="space-y-2">
                 {% for ingredient in form.ingredients %}

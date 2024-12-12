@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\RecetteIngredientRepository;
@@ -41,24 +40,24 @@ class RecetteIngredient
         return $this;
     }
 
-    public function getRecetteId(): ?Recette
+    public function getRecette(): ?Recette
     {
         return $this->recette;
     }
 
-    public function setRecetteId(?Recette $recette): static
+    public function setRecette(?Recette $recette): static
     {
         $this->recette = $recette;
 
         return $this;
     }
 
-    public function getIngredientId(): ?Ingredient
+    public function getIngredient(): ?Ingredient
     {
         return $this->ingredient;
     }
 
-    public function setIngredientId(?Ingredient $ingredient): static
+    public function setIngredient(?Ingredient $ingredient): static
     {
         $this->ingredient = $ingredient;
 

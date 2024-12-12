@@ -48,7 +48,7 @@ class IngredientController extends AbstractController
             }
 
             // Associer l'utilisateur connecté
-            $ingredient->setUtilisateurid($this->getUser());
+            $ingredient->setUtilisateur($this->getUser());;
 
             $entityManager->persist($ingredient);
             $entityManager->flush();

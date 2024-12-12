@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Entity;
 
 use App\Repository\IngredientRepository;
@@ -25,6 +26,9 @@ class Ingredient
      */
     #[ORM\OneToMany(targetEntity: RecetteIngredient::class, mappedBy: 'ingredient', orphanRemoval: true)]
     private Collection $recetteIngredients;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $photo = null;  // Propriété photo ajoutée
 
     public function __construct()
     {
@@ -86,6 +90,20 @@ class Ingredient
                 $recetteIngredient->setIngredient(null);
             }
         }
+
+        return $this;
+    }
+
+    // Getter pour la propriété photo
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    // Setter pour la propriété photo
+    public function setPhoto(?string $photo): static
+    {
+        $this->photo = $photo;
 
         return $this;
     }

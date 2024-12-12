@@ -39,6 +39,19 @@
             {{ form_errors(form.photo) }}
         </div>
 
+        <div class="form-group">
+            <label class="block text-gray-700 font-semibold mb-2">Sélectionner les ingrédients</label>
+            <div class="space-y-2">
+                {% for ingredient in form.ingredients %}
+                    <div class="flex items-center">
+                        {{ form_widget(ingredient) }}
+                        <label class="ml-2">{{ ingredient.vars.label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+            {{ form_errors(form.ingredients) }}
+        </div>
+
         {{ form_rest(form) }}
 
         <button type="submit" class="btn bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-500 transition">

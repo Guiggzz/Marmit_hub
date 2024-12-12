@@ -1,45 +1,62 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ recette.nom }}{% endblock %}
+{% block title %}Recette - {{ recette.nom }}{% endblock %}
 
 {% block body %}
 <div class="container mx-auto px-6 py-10">
-    <h1 class="text-3xl font-bold text-orange-600 mb-6">{{ recette.nom }}</h1>
-
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        {% if recette.photo %}
-            <img 
-                src="{{ asset('uploads/recettes/' ~ recette.photo) }}" 
-                alt="{{ recette.nom }}" 
-                class="w-full h-48 object-cover"
-            >
-        {% else %}
-            <div class="bg-gray-200 h-48 flex items-center justify-center text-gray-500">
-                Pas d'image
-            </div>
-        {% endif %}
-
+    <!-- Card principale -->
+    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
         <div class="p-6">
-            <p class="text-gray-600 text-sm mb-2">⏱️ Durée : {{ recette.dureeTotale }} minutes</p>
-            <p class="text-gray-600 text-sm mb-4">👥 Pour {{ recette.nombrePersonnes }} personne(s)</p>
+            <!-- Titre de la recette -->
+            <h1 class="text-3xl font-extrabold text-gray-800 mb-6">{{ recette.nom }}</h1>
 
-            <!-- Afficher le nom de l'utilisateur qui a créé la recette -->
-            <p class="text-gray-600 text-sm mb-4">Créée par : {{ utilisateur.username }}</p>
+            <!-- Contenu de la recette (texte, durée, nombre de personnes) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-6">
+                <div class="flex flex-col space-y-4">
+                    <p class="text-lg text-gray-700">{{ recette.texte }}</p>
+                    <div class="flex items-center space-x-4">
+                        <p class="text-gray-600 font-medium">Durée :</p>
+                        <span class="text-orange-600 font-semibold">{{ recette.dureeTotale }} minutes</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <p class="text-gray-600 font-medium">Pour :</p>
+                        <span class="text-orange-600 font-semibold">{{ recette.nombrePersonnes }} personne(s)</span>
+                    </div>
+                </div>
+
+                <!-- Photo de la recette (si disponible) -->
+                {% if recette.photo %}
+                    <div class="w-full max-w-sm mx-auto">
+                        <img src="{{ asset('uploads/recettes/' ~ recette.photo) }}" alt="{{ recette.nom }}" class="w-full h-auto rounded-lg shadow-lg">
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Informations sur le créateur -->
+            <div class="mt-6 mb-10">
+                <p class="text-lg text-gray-600 font-medium">Créateur :</p>
+                <p class="text-gray-800">{{ recette.utilisateur.username }}</p>
+            </div>
+
+            <!-- Affichage des ingrédients (si nécessaire) -->
+            <div class="mt-10">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Ingrédients :</h2>
+                <ul class="space-y-2">
+                    {# Ajoutez une boucle pour lister les ingrédients ici #}
+                    {# Exemple : #}
+                    {# {% for ingredient in recette.ingredients %} #}
+                    {# <li class="text-gray-800">{{ ingredient.nom }}</li> #}
+                    {# {% endfor %} #}
+                </ul>
+            </div>
+
+            <!-- Bouton de retour à l'accueil -->
+            <div class="mt-6">
+                <a href="{{ path('app_home') }}" class="btn bg-orange-600 text-white px-6 py-3 rounded-md hover:bg-orange-500 transition">
+                    Retour à l'accueil
+                </a>
+            </div>
         </div>
-    </div>
-
-    <div class="mt-6">
-        <h3 class="text-xl font-semibold">Ingrédients</h3>
-        <ul class="list-disc pl-5">
-            {% for ingredient in recette.ingredients %}
-                <li>{{ ingredient.nom }} - {{ ingredient.quantite }}</li>
-            {% else %}
-                <li>Aucun ingrédient spécifié.</li>
-            {% endfor %}
-        </ul>
-
-        <h3 class="text-xl font-semibold mt-4">Instructions</h3>
-        <p>{{ recette.texte }}</p>
     </div>
 </div>
 {% endblock %}

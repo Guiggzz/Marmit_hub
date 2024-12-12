@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Recette;
+use App\Entity\Ingredient;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -19,31 +21,49 @@ class RecetteType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
+                'label' => 'Nom de la recette',
                 'constraints' => [
-                    new NotBlank(['message' => 'Veuillez saisir un nom pour la recette'])
-                ]
+                    new NotBlank(['message' => 'Veuillez saisir un nom pour la recette']),
+                ],
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Nom de la recette',
+                ],
             ])
             ->add('texte', TextareaType::class, [
                 'label' => 'Instructions de préparation',
                 'constraints' => [
-                    new NotBlank(['message' => 'Veuillez saisir les instructions de préparation'])
-                ]
+                    new NotBlank(['message' => 'Veuillez saisir les instructions de préparation']),
+                ],
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Expliquer la préparation',
+                    'rows' => 5,
+                ],
             ])
             ->add('duree_totale', IntegerType::class, [
                 'label' => 'Durée totale (en minutes)',
                 'constraints' => [
-                    new NotBlank(['message' => 'Veuillez saisir la durée de préparation'])
-                ]
+                    new NotBlank(['message' => 'Veuillez saisir la durée de préparation']),
+                ],
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Durée en minutes',
+                ],
             ])
             ->add('nombre_personnes', IntegerType::class, [
                 'label' => 'Nombre de personnes',
                 'constraints' => [
-                    new NotBlank(['message' => 'Veuillez indiquer le nombre de personnes'])
-                ]
+                    new NotBlank(['message' => 'Veuillez indiquer le nombre de personnes']),
+                ],
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Nombre de personnes',
+                ],
             ])
             ->add('photo', FileType::class, [
                 'label' => 'Photo de la recette',
-                'mapped' => false,
+                'mapped' => false, // Photo n'est pas liée à l'entité Recette
                 'required' => false,
                 'constraints' => [
                     new File([
@@ -53,9 +73,23 @@ class RecetteType extends AbstractType
                             'image/png',
                             'image/gif'
                         ],
-                        'mimeTypesMessage' => 'Veuillez télécharger une image valide'
+                        'mimeTypesMessage' => 'Veuillez télécharger une image valide',
                     ])
-                ]
+                ],
+                'attr' => [
+                    'class' => 'form-control-file',
+                ],
+            ])
+            // Ajouter un champ pour les ingrédients
+            ->add('ingredients', EntityType::class, [
+                'class' => Ingredient::class, // Lier à l'entité Ingredient
+                'choice_label' => 'nom', // Afficher le nom de l'ingrédient dans le formulaire
+                'multiple' => true, // Permettre la sélection multiple
+                'expanded' => true, // Utiliser des cases à cocher pour la sélection
+                'label' => 'Sélectionner les ingrédients',
+                'attr' => [
+                    'class' => 'form-check-input',
+                ],
             ]);
     }
 

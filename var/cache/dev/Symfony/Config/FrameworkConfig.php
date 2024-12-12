@@ -561,23 +561,12 @@ class FrameworkConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
     }
 
     /**
-     * @template TValue
-     * @param TValue $value
      * assets configuration
-     * @default {"enabled":false,"strict_mode":false,"version_strategy":null,"version":null,"version_format":"%%s?%%s","json_manifest_path":null,"base_path":"","base_urls":[],"packages":[]}
-     * @return \Symfony\Config\Framework\AssetsConfig|$this
-     * @psalm-return (TValue is array ? \Symfony\Config\Framework\AssetsConfig : static)
-     */
-    public function assets(array $value = []): \Symfony\Config\Framework\AssetsConfig|static
+     * @default {"enabled":true,"strict_mode":false,"version_strategy":null,"version":null,"version_format":"%%s?%%s","json_manifest_path":null,"base_path":"","base_urls":[],"packages":[]}
+    */
+    public function assets(array $value = []): \Symfony\Config\Framework\AssetsConfig
     {
-        if (!\is_array($value)) {
-            $this->_usedProperties['assets'] = true;
-            $this->assets = $value;
-
-            return $this;
-        }
-
-        if (!$this->assets instanceof \Symfony\Config\Framework\AssetsConfig) {
+        if (null === $this->assets) {
             $this->_usedProperties['assets'] = true;
             $this->assets = new \Symfony\Config\Framework\AssetsConfig($value);
         } elseif (0 < \func_num_args()) {
@@ -1328,7 +1317,7 @@ class FrameworkConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
 
         if (array_key_exists('assets', $value)) {
             $this->_usedProperties['assets'] = true;
-            $this->assets = \is_array($value['assets']) ? new \Symfony\Config\Framework\AssetsConfig($value['assets']) : $value['assets'];
+            $this->assets = new \Symfony\Config\Framework\AssetsConfig($value['assets']);
             unset($value['assets']);
         }
 
@@ -1566,7 +1555,7 @@ class FrameworkConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
             $output['request'] = $this->request instanceof \Symfony\Config\Framework\RequestConfig ? $this->request->toArray() : $this->request;
         }
         if (isset($this->_usedProperties['assets'])) {
-            $output['assets'] = $this->assets instanceof \Symfony\Config\Framework\AssetsConfig ? $this->assets->toArray() : $this->assets;
+            $output['assets'] = $this->assets->toArray();
         }
         if (isset($this->_usedProperties['assetMapper'])) {
             $output['asset_mapper'] = $this->assetMapper instanceof \Symfony\Config\Framework\AssetMapperConfig ? $this->assetMapper->toArray() : $this->assetMapper;

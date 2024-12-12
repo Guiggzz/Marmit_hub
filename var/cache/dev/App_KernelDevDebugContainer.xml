@@ -54,6 +54,7 @@
     <parameter key="kernel.charset">UTF-8</parameter>
     <parameter key="kernel.container_class">App_KernelDevDebugContainer</parameter>
     <parameter key="recettes_photos_directory">/Users/mattistajan/Herd/Marmit_hub/public/uploads/recettes</parameter>
+    <parameter key="ingredients_photos_directory">/Users/mattistajan/Herd/Marmit_hub/public/uploads/ingredients</parameter>
     <parameter key="event_dispatcher.event_aliases" type="collection">
       <parameter key="Symfony\Component\Console\Event\ConsoleCommandEvent">console.command</parameter>
       <parameter key="Symfony\Component\Console\Event\ConsoleErrorEvent">console.error</parameter>
@@ -214,6 +215,13 @@
         <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\HomeController"/>
       </call>
     </service>
+    <service id="App\Controller\IngredientController" class="App\Controller\IngredientController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\IngredientController"/>
+      </call>
+    </service>
     <service id="App\Controller\RecetteController" class="App\Controller\RecetteController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -234,6 +242,12 @@
       <call method="setContainer">
         <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\SecurityController"/>
       </call>
+    </service>
+    <service id="App\Form\IngredientType" class="App\Form\IngredientType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
+    <service id="App\Form\RecetteIngredientType" class="App\Form\RecetteIngredientType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
     </service>
     <service id="App\Form\RecetteType" class="App\Form\RecetteType" autowire="true" autoconfigure="true">
       <tag name="form.type"/>
@@ -291,7 +305,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.BPOgW6."/>
+      <argument type="service" id=".service_locator.4RtEb52"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -868,6 +882,8 @@
         <argument>Symfony\Bridge\Doctrine\Form\Type</argument>
       </argument>
       <argument type="collection">
+        <argument>App\Form\IngredientType</argument>
+        <argument>App\Form\RecetteIngredientType</argument>
         <argument>App\Form\RecetteType</argument>
         <argument>App\Form\RegistrationFormType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FormType</argument>
@@ -1580,7 +1596,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.BPOgW6."/>
+      <argument type="service" id=".service_locator.4RtEb52"/>
     </service>
     <service id="routing.resolver" class="Symfony\Component\Config\Loader\LoaderResolver">
       <call method="addLoader">
@@ -1884,7 +1900,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension">
-      <argument type="service" id=".service_locator.qwNBVF9"/>
+      <argument type="service" id=".service_locator.vs_srtP"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -4242,6 +4258,9 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\HomeController" class="App\Controller\HomeController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\HomeController" class="App\Controller\HomeController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\HomeController" class="App\Controller\HomeController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\IngredientController" class="App\Controller\IngredientController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\IngredientController" class="App\Controller\IngredientController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\IngredientController" class="App\Controller\IngredientController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RecetteController" class="App\Controller\RecetteController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RecetteController" class="App\Controller\RecetteController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\RecetteController" class="App\Controller\RecetteController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -4251,6 +4270,10 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\IngredientType" class="App\Form\IngredientType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\IngredientType" class="App\Form\IngredientType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\RecetteIngredientType" class="App\Form\RecetteIngredientType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\RecetteIngredientType" class="App\Form\RecetteIngredientType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\RecetteType" class="App\Form\RecetteType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\RecetteType" class="App\Form\RecetteType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\RegistrationFormType" class="App\Form\RegistrationFormType" autowire="true" abstract="true"/>
@@ -4703,6 +4726,13 @@
         <argument key="slugger" type="service_closure" id="slugger"/>
       </argument>
     </service>
+    <service id=".service_locator.EwHoDSB" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="recette" type="service_closure" id=".errored..service_locator.EwHoDSB.App\Entity\Recette"/>
+      </argument>
+    </service>
     <service id=".service_locator.jpvOrpT" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -4717,7 +4747,7 @@
         <argument key="authenticationUtils" type="service_closure" id="security.authentication_utils"/>
       </argument>
     </service>
-    <service id=".service_locator.BPOgW6." class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.4RtEb52" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
@@ -4725,12 +4755,16 @@
         <argument key="kernel::loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="App\Kernel::loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="App\Controller\HomeController::index" type="service_closure" id=".service_locator.UyLPncx"/>
+        <argument key="App\Controller\IngredientController::nouvelleIngredient" type="service_closure" id=".service_locator.LNwsF6h"/>
+        <argument key="App\Controller\IngredientController::ajouterIngredientRecette" type="service_closure" id=".service_locator.EwHoDSB"/>
         <argument key="App\Controller\RecetteController::nouvelleRecette" type="service_closure" id=".service_locator.LNwsF6h"/>
         <argument key="App\Controller\RegistrationController::register" type="service_closure" id=".service_locator.jpvOrpT"/>
         <argument key="App\Controller\SecurityController::login" type="service_closure" id=".service_locator.rSTd.nA"/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="App\Controller\HomeController:index" type="service_closure" id=".service_locator.UyLPncx"/>
+        <argument key="App\Controller\IngredientController:nouvelleIngredient" type="service_closure" id=".service_locator.LNwsF6h"/>
+        <argument key="App\Controller\IngredientController:ajouterIngredientRecette" type="service_closure" id=".service_locator.EwHoDSB"/>
         <argument key="App\Controller\RecetteController:nouvelleRecette" type="service_closure" id=".service_locator.LNwsF6h"/>
         <argument key="App\Controller\RegistrationController:register" type="service_closure" id=".service_locator.jpvOrpT"/>
         <argument key="App\Controller\SecurityController:login" type="service_closure" id=".service_locator.rSTd.nA"/>
@@ -4813,9 +4847,11 @@
       <argument type="service" id="argument_resolver.query_parameter_value_resolver"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.qwNBVF9" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.vs_srtP" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="App\Form\IngredientType" type="service_closure" id="App\Form\IngredientType"/>
+        <argument key="App\Form\RecetteIngredientType" type="service_closure" id="App\Form\RecetteIngredientType"/>
         <argument key="App\Form\RecetteType" type="service_closure" id="App\Form\RecetteType"/>
         <argument key="App\Form\RegistrationFormType" type="service_closure" id="App\Form\RegistrationFormType"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="service_closure" id="form.type.form"/>
@@ -5047,6 +5083,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.O2p6Lk7" method="withContext"/>
     </service>
+    <service id=".service_locator.O2p6Lk7.App\Controller\IngredientController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\IngredientController"/>
+      <argument>App\Controller\IngredientController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+    </service>
     <service id=".service_locator.O2p6Lk7.App\Controller\RecetteController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\RecetteController"/>
       <argument>App\Controller\RecetteController</argument>
@@ -5196,6 +5238,7 @@
         <argument type="collection">
           <argument>App\Kernel</argument>
           <argument>App\Controller\HomeController</argument>
+          <argument>App\Controller\IngredientController</argument>
           <argument>App\Controller\RecetteController</argument>
           <argument>App\Controller\RegistrationController</argument>
           <argument>App\Controller\SecurityController</argument>
@@ -5244,6 +5287,9 @@
     <service id="debug.security.event_dispatcher.main.inner" class="Symfony\Component\EventDispatcher\EventDispatcher"/>
     <service id=".errored..service_locator.y4_Zrx..Symfony\Component\Config\Loader\LoaderInterface" class="Symfony\Component\Config\Loader\LoaderInterface">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.y4_Zrx.&quot;: it needs an instance of &quot;Symfony\Component\Config\Loader\LoaderInterface&quot; but this type has been excluded from autowiring."/>
+    </service>
+    <service id=".errored..service_locator.EwHoDSB.App\Entity\Recette" class="App\Entity\Recette">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.EwHoDSB&quot;: it needs an instance of &quot;App\Entity\Recette&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".console.command.about.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>about</argument>
@@ -6045,7 +6091,7 @@
     <service id="Twig\Environment" alias="twig"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.BPOgW6."/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.4RtEb52"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface" alias="logger"/>
@@ -6061,6 +6107,7 @@
     <service id=".service_locator.gFlme_s" alias=".service_locator.y4_Zrx."/>
     <service id=".service_locator..5lQGs8" alias=".service_locator.UyLPncx"/>
     <service id=".service_locator.lUJI3Z8" alias=".service_locator.LNwsF6h"/>
+    <service id=".service_locator.AdQzkaa" alias=".service_locator.EwHoDSB"/>
     <service id=".service_locator.rRLvwrH" alias=".service_locator.jpvOrpT"/>
     <service id=".service_locator.7NIAq8D" alias=".service_locator.rSTd.nA"/>
     <service id=".service_locator.xgZqYYA" alias=".service_locator.O2p6Lk7"/>

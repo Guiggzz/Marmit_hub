@@ -9,6 +9,7 @@ return [
     false, // $matchHost
     [ // $staticRoutes
         '/' => [[['_route' => 'app_home', '_controller' => 'App\\Controller\\HomeController::index'], null, null, null, false, false, null]],
+        '/creation/ingredient' => [[['_route' => 'app_ingredient_nouvelle', '_controller' => 'App\\Controller\\IngredientController::nouvelleIngredient'], null, null, null, false, false, null]],
         '/recette/nouvelle' => [[['_route' => 'app_recette_nouvelle', '_controller' => 'App\\Controller\\RecetteController::nouvelleRecette'], null, null, null, false, false, null]],
         '/register' => [[['_route' => 'app_register', '_controller' => 'App\\Controller\\RegistrationController::register'], null, null, null, false, false, null]],
         '/login' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\SecurityController::login'], null, null, null, false, false, null]],
@@ -17,11 +18,13 @@ return [
     [ // $regexpList
         0 => '{^(?'
                 .'|/_error/(\\d+)(?:\\.([^/]++))?(*:35)'
+                .'|/ajouter\\-ingredient\\-a\\-recette/([^/]++)(*:83)'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
-        35 => [
-            [['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null],
+        35 => [[['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null]],
+        83 => [
+            [['_route' => 'app_ajouter_ingredient_recette', '_controller' => 'App\\Controller\\IngredientController::ajouterIngredientRecette'], ['recetteId'], null, null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

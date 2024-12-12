@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\IngredientRepository;
@@ -24,7 +23,7 @@ class Ingredient
     /**
      * @var Collection<int, RecetteIngredient>
      */
-    #[ORM\OneToMany(targetEntity: RecetteIngredient::class, mappedBy: 'ingredient_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: RecetteIngredient::class, mappedBy: 'ingredient', orphanRemoval: true)]
     private Collection $recetteIngredients;
 
     public function __construct()
@@ -49,14 +48,14 @@ class Ingredient
         return $this;
     }
 
-    public function getUilisateurId(): ?User
+    public function getUtilisateur(): ?User
     {
         return $this->utilisateur;
     }
 
-    public function setUilisateurId(?User $uilisateur_id): static
+    public function setUtilisateur(?User $utilisateur): static
     {
-        $this->utilisateur = $uilisateur_id;
+        $this->utilisateur = $utilisateur;
 
         return $this;
     }
@@ -73,7 +72,7 @@ class Ingredient
     {
         if (!$this->recetteIngredients->contains($recetteIngredient)) {
             $this->recetteIngredients->add($recetteIngredient);
-            $recetteIngredient->setIngredientId($this);
+            $recetteIngredient->setIngredient($this);
         }
 
         return $this;
@@ -83,8 +82,8 @@ class Ingredient
     {
         if ($this->recetteIngredients->removeElement($recetteIngredient)) {
             // set the owning side to null (unless already changed)
-            if ($recetteIngredient->getIngredientId() === $this) {
-                $recetteIngredient->setIngredientId(null);
+            if ($recetteIngredient->getIngredient() === $this) {
+                $recetteIngredient->setIngredient(null);
             }
         }
 

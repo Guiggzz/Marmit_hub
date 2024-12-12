@@ -111,12 +111,13 @@ class Recette
         return $this;
     }
 
-    public function getUtilisateurId(): ?User
+    // Méthodes modifiées pour être plus claires
+    public function getUtilisateur(): ?User
     {
         return $this->utilisateur;
     }
 
-    public function setUtilisateurId(?User $utilisateur): static
+    public function setUtilisateur(?User $utilisateur): static
     {
         $this->utilisateur = $utilisateur;
 

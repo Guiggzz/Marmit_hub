@@ -77,10 +77,9 @@ class RecetteType extends AbstractType
             ])
             ->add('ingredients', EntityType::class, [
                 'class' => Ingredient::class,
-                'choice_label' => 'nom',
                 'multiple' => true,
-                'expanded' => true,
-                'label' => 'Ingrédients',
+                'expanded' => true, // Pour utiliser des cases à cocher
+                'choice_label' => 'nom', // Assurez-vous que l'attribut 'nom' existe dans l'entité Ingredient
             ]);
     }
 

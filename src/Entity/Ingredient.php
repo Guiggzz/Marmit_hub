@@ -64,6 +64,11 @@ class Ingredient
         return $this;
     }
 
+    public function __toString(): string
+    {
+        return $this->nom; // Représenter l'ingrédient par son nom
+    }
+
     /**
      * @return Collection<int, RecetteIngredient>
      */

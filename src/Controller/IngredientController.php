@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\Ingredient;
@@ -18,8 +19,8 @@ class IngredientController extends AbstractController
 {
     #[Route('/creation/ingredient', name: 'app_ingredient_nouvelle')]
     public function nouvelleIngredient(
-        Request $request, 
-        EntityManagerInterface $entityManager, 
+        Request $request,
+        EntityManagerInterface $entityManager,
         SluggerInterface $slugger
     ): Response {
         $ingredient = new Ingredient();
@@ -33,7 +34,7 @@ class IngredientController extends AbstractController
                 $safeFilename = $slugger->slug($originalFilename);
                 $extension = $photoFile->guessExtension();
 
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$extension;
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $extension;
 
                 try {
                     $photoFile->move(
@@ -76,8 +77,8 @@ class IngredientController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // Lier l'ingrédient existant à la recette
             $ingredient = $form->get('ingredient')->getData(); // Assurez-vous que l'ingrédient est bien lié à ce formulaire
-            $recetteIngredient->setIngredientId($ingredient);
-            $recetteIngredient->setRecetteId($recette);
+            $recetteIngredient->setIngredient($ingredient);
+            $recetteIngredient->setRecette($recette);
 
             // Persist l'objet RecetteIngredient
             $entityManager->persist($recetteIngredient);
@@ -93,4 +94,3 @@ class IngredientController extends AbstractController
         ]);
     }
 }
-

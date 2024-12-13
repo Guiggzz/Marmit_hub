@@ -149,7 +149,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->user_id_ingredients->contains($userIdIngredient)) {
             $this->user_id_ingredients->add($userIdIngredient);
-            $userIdIngredient->setUilisateurId($this);
+            $userIdIngredient->setUtilisateur($this);
         }
 
         return $this;
@@ -159,8 +159,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->user_id_ingredients->removeElement($userIdIngredient)) {
             // set the owning side to null (unless already changed)
-            if ($userIdIngredient->getUilisateurId() === $this) {
-                $userIdIngredient->setUilisateurId(null);
+            if ($userIdIngredient->getUtilisateur() === $this) {
+                $userIdIngredient->setUtilisateur(null);
             }
         }
 
@@ -179,7 +179,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->user_recette->contains($userRecette)) {
             $this->user_recette->add($userRecette);
-            $userRecette->setUtilisateurId($this);
+            $userRecette->setUtilisateur($this);
         }
 
         return $this;
@@ -189,8 +189,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->user_recette->removeElement($userRecette)) {
             // set the owning side to null (unless already changed)
-            if ($userRecette->getUtilisateurId() === $this) {
-                $userRecette->setUtilisateurId(null);
+            if ($userRecette->getUtilisateur() === $this) {
+                $userRecette->setUtilisateur(null);
             }
         }
 

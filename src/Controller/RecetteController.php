@@ -20,6 +20,16 @@ class RecetteController extends AbstractController
         // Créer une nouvelle recette
         $recette = new Recette();
 
+        // Récupérer l'utilisateur connecté
+        $utilisateur = $this->getUser();
+        if (!$utilisateur) {
+            // Si l'utilisateur n'est pas connecté, vous pouvez rediriger ou afficher un message d'erreur
+            return $this->redirectToRoute('app_login'); // Exemple de redirection vers la page de login
+        }
+
+        // Assigner l'utilisateur à la recette
+        $recette->setUtilisateur($utilisateur);
+
         // Créer le formulaire
         $form = $this->createForm(RecetteType::class, $recette);
         $form->handleRequest($request);
@@ -41,7 +51,6 @@ class RecetteController extends AbstractController
             $em->flush();
 
             // Rediriger ou afficher un message de succès
-            return $this->redirectToRoute('app_recette_success');
         }
 
         return $this->render('recette/nouvelle.html.twig', [

@@ -20,7 +20,6 @@ final class Version20241212110940 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE ingredient ADD COLUMN photo VARCHAR(255) DEFAULT NULL');
     }
 
     public function down(Schema $schema): void

@@ -1,68 +1,69 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer une nouvelle recette{% endblock %}
+{% block title %}Créer une nouvelle recette
+{% endblock %}
 
 {% block body %}
-{% if app.user %}
-<div class="container mx-auto px-6 py-10">
-    <h1 class="text-2xl font-bold text-orange-600 mb-6">Créer une nouvelle recette</h1>
+	{% if app.user %}
+		<div class="container mx-auto px-6 py-10">
+			<h1 class="text-2xl font-bold text-orange-600 mb-6">Créer une nouvelle recette</h1>
 
-    {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
-    
-    <div class="form-group">
-        {{ form_label(form.nom, null, {'label_attr': {'class': 'block text-gray-700 font-semibold mb-2'}}) }}
-        {{ form_widget(form.nom, {'attr': {'class': 'form-control w-full border border-gray-300 rounded-md p-2'}}) }}
-        {{ form_errors(form.nom) }}
-    </div>
+			{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
 
-    <div class="form-group">
-        {{ form_label(form.texte, null, {'label_attr': {'class': 'block text-gray-700 font-semibold mb-2'}}) }}
-        {{ form_widget(form.texte, {'attr': {'class': 'form-control w-full border border-gray-300 rounded-md p-2', 'rows': 5}}) }}
-        {{ form_errors(form.texte) }}
-    </div>
+			<div class="form-group">
+				{{ form_label(form.nom, null, {'label_attr': {'class': 'block text-gray-700 font-semibold mb-2'}}) }}
+				{{ form_widget(form.nom, {'attr': {'class': 'form-control w-full border border-gray-300 rounded-md p-2'}}) }}
+				{{ form_errors(form.nom) }}
+			</div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="form-group">
-            {{ form_label(form.duree_totale, null, {'label_attr': {'class': 'block text-gray-700 font-semibold mb-2'}}) }}
-            {{ form_widget(form.duree_totale, {'attr': {'class': 'form-control w-full border border-gray-300 rounded-md p-2'}}) }}
-            {{ form_errors(form.duree_totale) }}
-        </div>
-        <div class="form-group">
-            {{ form_label(form.nombre_personnes, null, {'label_attr': {'class': 'block text-gray-700 font-semibold mb-2'}}) }}
-            {{ form_widget(form.nombre_personnes, {'attr': {'class': 'form-control w-full border border-gray-300 rounded-md p-2'}}) }}
-            {{ form_errors(form.nombre_personnes) }}
-        </div>
-    </div>
+			<div class="form-group">
+				{{ form_label(form.texte, null, {'label_attr': {'class': 'block text-gray-700 font-semibold mb-2'}}) }}
+				{{ form_widget(form.texte, {'attr': {'class': 'form-control w-full border border-gray-300 rounded-md p-2', 'rows': 5}}) }}
+				{{ form_errors(form.texte) }}
+			</div>
 
-    <div class="form-group">
-        <label class="block text-gray-700 font-semibold mb-2">Sélectionner les ingrédients</label>
-        <div class="space-y-2">
-            {% for ingredient in form.ingredients %}
-                <div class="flex items-center">
-                    {{ form_widget(ingredient) }}
-                    <label class="ml-2">{{ ingredient.vars.label }}</label>
-                </div>
-            {% endfor %}
-        </div>
-        {{ form_errors(form.ingredients) }}
-    </div>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<div class="form-group">
+					{{ form_label(form.duree_totale, null, {'label_attr': {'class': 'block text-gray-700 font-semibold mb-2'}}) }}
+					{{ form_widget(form.duree_totale, {'attr': {'class': 'form-control w-full border border-gray-300 rounded-md p-2'}}) }}
+					{{ form_errors(form.duree_totale) }}
+				</div>
+				<div class="form-group">
+					{{ form_label(form.nombre_personnes, null, {'label_attr': {'class': 'block text-gray-700 font-semibold mb-2'}}) }}
+					{{ form_widget(form.nombre_personnes, {'attr': {'class': 'form-control w-full border border-gray-300 rounded-md p-2'}}) }}
+					{{ form_errors(form.nombre_personnes) }}
+				</div>
+			</div>
 
-    <div class="form-group">
-        {{ form_label(form.photo, null, {'label_attr': {'class': 'block text-gray-700 font-semibold mb-2'}}) }}
-        {{ form_widget(form.photo, {'attr': {'class': 'form-control-file'}}) }}
-        {{ form_errors(form.photo) }}
-    </div>
+			<div class="form-group">
+				<label class="block text-gray-700 font-semibold mb-2">Sélectionner les ingrédients</label>
+				<div class="space-y-2">
+					{% for ingredient in form.ingredients %}
+						<div class="flex items-center">
+							{{ form_widget(ingredient) }}
+							<label class="ml-2">{{ ingredient.vars.label }}</label>
+						</div>
+					{% endfor %}
+				</div>
+				{{ form_errors(form.ingredients) }}
+			</div>
 
-    {{ form_rest(form) }}
+			<div class="form-group">
+				{{ form_label(form.photo, null, {'label_attr': {'class': 'block text-gray-700 font-semibold mb-2'}}) }}
+				{{ form_widget(form.photo, {'attr': {'class': 'form-control-file'}}) }}
+				{{ form_errors(form.photo) }}
+			</div>
 
-    <button type="submit" class="btn bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-500 transition">
-        Créer la recette
-    </button>
-    {{ form_end(form) }}
-</div>
-{% else %}
-    <script>
-        window.location.href = "{{ path('app_login') }}";
-    </script>
-{% endif %}
+			{{ form_rest(form) }}
+
+			<button type="submit" class="btn bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-500 transition">
+				Créer la recette
+			</button>
+			{{ form_end(form) }}
+		</div>
+	{% else %}
+		<script>
+			window.location.href = "{{ path('app_login') }}";
+		</script>
+	{% endif %}
 {% endblock %}

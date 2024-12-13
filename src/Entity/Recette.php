@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Entity;
 
 use App\Repository\RecetteRepository;
@@ -49,7 +50,7 @@ class Recette
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
-        $this->recetteIngredients = new ArrayCollection();
+        $this->recetteIngredients = new ArrayCollection();  // Initialisation de la collection
     }
 
     public function getId(): ?int
@@ -166,15 +167,17 @@ class Recette
     {
         $ingredients = new ArrayCollection();
         foreach ($this->recetteIngredients as $recetteIngredient) {
-            $ingredients->add($recetteIngredient->getIngredient());
+            $ingredients->add($recetteIngredient->getIngredient()); // Récupérer l'ingredient lié
         }
         return $ingredients;
     }
 
     public function addRecetteIngredient(RecetteIngredient $recetteIngredient): static
     {
+        // Vérifie si l'association existe déjà
         if (!$this->recetteIngredients->contains($recetteIngredient)) {
             $this->recetteIngredients->add($recetteIngredient);
+            // Définit la recette sur l'ingrédient
             $recetteIngredient->setRecette($this);
         }
 

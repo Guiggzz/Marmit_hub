@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Form;
 
 use App\Entity\Recette;
@@ -13,6 +14,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+
 
 class RecetteType extends AbstractType
 {
@@ -78,8 +81,16 @@ class RecetteType extends AbstractType
             ->add('ingredients', EntityType::class, [
                 'class' => Ingredient::class,
                 'multiple' => true,
+                'mapped' => false,
                 'expanded' => true, // Pour utiliser des cases à cocher
                 'choice_label' => 'nom', // Assurez-vous que l'attribut 'nom' existe dans l'entité Ingredient
+            ])
+            ->add('recetteIngredients', CollectionType::class, [
+                'entry_type' => RecetteIngredientType::class,
+                'entry_options' => ['label' => false],
+                'mapped' => false,
+                'allow_add' => true,
+                'by_reference' => false,
             ]);
     }
 

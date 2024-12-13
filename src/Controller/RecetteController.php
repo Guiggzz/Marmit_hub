@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\Recette;
@@ -13,41 +14,34 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class RecetteController extends AbstractController
 {
-    #[Route('/recette/nouvelle', name: 'app_recette_nouvelle')]
-    public function nouvelleRecette(
-        Request $request, 
-        EntityManagerInterface $entityManager, 
-        SluggerInterface $slugger
-    ): Response {
+    #[Route('/recette/nouvelle', name: 'app_recette_create')]
+    public function create(Request $request, EntityManagerInterface $em)
+    {
+        // Créer une nouvelle recette
         $recette = new Recette();
-        $form = $this->createForm(RecetteType::class, $recette);
 
+        // Créer le formulaire
+        $form = $this->createForm(RecetteType::class, $recette);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $photoFile = $form->get('photo')->getData();
-            if ($photoFile) {
-                $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $photoFile->guessExtension();
+            // Récupérer les recetteIngredients du formulaire
+            $recetteIngredients = $form->get('recetteIngredients')->getData();
 
-                try {
-                    $photoFile->move(
-                        $this->getParameter('recettes_photos_directory'),
-                        $newFilename
-                    );
-                    $recette->setPhoto($newFilename);
-                } catch (FileException $e) {
-                    $this->addFlash('error', 'Erreur lors du téléchargement de la photo');
-                }
+            // Enregistrer la recette dans la base de données
+            $em->persist($recette);
+
+            // Enregistrer chaque ingrédient dans la table recette_ingredient avec la quantité
+            foreach ($recetteIngredients as $recetteIngredient) {
+                $recetteIngredient->setRecette($recette); // Associer l'ingrédient à la recette
+                $em->persist($recetteIngredient); // Enregistrer chaque RecetteIngredient
             }
 
-            $recette->setUtilisateur($this->getUser());
-            $entityManager->persist($recette);
-            $entityManager->flush();
+            // Sauvegarder les changements
+            $em->flush();
 
-            $this->addFlash('success', 'Recette créée avec succès !');
-            return $this->redirectToRoute('app_home');
+            // Rediriger ou afficher un message de succès
+            return $this->redirectToRoute('app_recette_success');
         }
 
         return $this->render('recette/nouvelle.html.twig', [
@@ -56,12 +50,12 @@ class RecetteController extends AbstractController
     }
 
     #[Route('/recette/{id}', name: 'recette_show')]
-    public function show(Recette $recette): Response
+    public function show($id, EntityManagerInterface $em)
     {
+        $recette = $em->getRepository(Recette::class)->find($id);
         if (!$recette) {
-            throw $this->createNotFoundException('La recette n\'existe pas');
+            throw $this->createNotFoundException('Recette non trouvée');
         }
-
         return $this->render('recette/show.html.twig', [
             'recette' => $recette,
         ]);

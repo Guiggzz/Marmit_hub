@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
+#[ORM\Table(name: 'recette_ingredient')]
 class RecetteIngredient
 {
     // Propriété primaire (ID)
@@ -14,18 +15,18 @@ class RecetteIngredient
     private ?int $id = null;
 
     // Relation ManyToOne avec Recette
-    #[ORM\ManyToOne(targetEntity: Recette::class, inversedBy: 'recetteIngredients')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Recette::class, inversedBy: 'recetteIngredients', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Recette $recette = null;
 
     // Relation ManyToOne avec Ingredient
-    #[ORM\ManyToOne(targetEntity: Ingredient::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Ingredient::class, cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Ingredient $ingredient = null;
 
     // Propriété pour la quantité associée à l'ingrédient
     #[ORM\Column(type: 'integer')]
-    private ?int $quantite = null;
+    private ?int $quantite = 1;
 
     // Getter pour l'ID
     public function getId(): ?int
@@ -39,7 +40,7 @@ class RecetteIngredient
         return $this->recette;
     }
 
-    public function setRecette(?Recette $recette): static
+    public function setRecette(?Recette $recette): self
     {
         $this->recette = $recette;
         return $this;
@@ -51,7 +52,7 @@ class RecetteIngredient
         return $this->ingredient;
     }
 
-    public function setIngredient(?Ingredient $ingredient): static
+    public function setIngredient(?Ingredient $ingredient): self
     {
         $this->ingredient = $ingredient;
         return $this;
@@ -63,7 +64,7 @@ class RecetteIngredient
         return $this->quantite;
     }
 
-    public function setQuantite(int $quantite): static
+    public function setQuantite(int $quantite): self
     {
         $this->quantite = $quantite;
         return $this;

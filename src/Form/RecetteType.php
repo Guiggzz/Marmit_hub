@@ -65,8 +65,8 @@ class RecetteType extends AbstractType
             ])
             ->add('photo', FileType::class, [
                 'label' => 'Photo de la recette',
-                'mapped' => false,
                 'required' => false,
+                'mapped' => false,
                 'constraints' => [
                     new File([
                         'maxSize' => '2M',
@@ -80,17 +80,25 @@ class RecetteType extends AbstractType
             ])
             ->add('ingredients', EntityType::class, [
                 'class' => Ingredient::class,
+                'choice_label' => 'nom',
                 'multiple' => true,
-                'mapped' => false,
-                'expanded' => true, // Pour utiliser des cases à cocher
-                'choice_label' => 'nom', // Assurez-vous que l'attribut 'nom' existe dans l'entité Ingredient
+                'expanded' => true, // Affichage sous forme de cases à cocher
+                'mapped' => false, // Les ingrédients ne sont pas directement liés à Recette
+            ])
+            ->add('quantite', IntegerType::class, [
+                'label' => 'Quantité',
+                'required' => true,
+                'attr' => ['min' => 1],
+                'mapped' => false, // Les ingrédients ne sont pas directement liés à Recette
+
             ])
             ->add('recetteIngredients', CollectionType::class, [
                 'entry_type' => RecetteIngredientType::class,
-                'entry_options' => ['label' => false],
-                'mapped' => false,
                 'allow_add' => true,
                 'by_reference' => false,
+                'label' => 'Ingrédients',
+                'mapped' => false, // Les ingrédients ne sont pas directement liés à Recette
+
             ]);
     }
 

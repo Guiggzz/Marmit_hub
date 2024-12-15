@@ -49,11 +49,14 @@
 				<!-- Liste des ingrédients -->
 				<div class="mt-10">
 					<h2 class="text-2xl font-semibold text-gray-800 mb-4">Ingrédients :</h2>
-					<ul
-						class="space-y-2">
-						{# Liste des ingrédients ici #}
+					<ul class="space-y-2">
 						{% for ingredient in recette.ingredients %}
-							<li class="text-gray-800">{{ ingredient.nom }}</li>
+							<li>
+								<!-- Lien vers la page de l'ingrédient -->
+								<a href="{{ path('app_ingredient_show', { id: ingredient.id }) }}" class="text-orange-600 hover:underline">
+									{{ ingredient.nom }}
+								</a>
+							</li>
 						{% endfor %}
 					</ul>
 				</div>

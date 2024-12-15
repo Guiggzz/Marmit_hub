@@ -18,25 +18,26 @@ class RecetteController extends AbstractController
     #[Route('/recette/nouvelle', name: 'app_recette_create')]
     public function create(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
-        // Créer une nouvelle recette
         $recette = new Recette();
 
-        // Récupérer l'utilisateur connecté
+        // Initialisation d'un ingrédient vide pour afficher un champ dans le formulaire
+        $recetteIngredient = new RecetteIngredient();
+        $recetteIngredient->setRecette($recette);
+        $recette->addRecetteIngredient($recetteIngredient);
+
+        // Associer l'utilisateur connecté
         $utilisateur = $this->getUser();
         if (!$utilisateur) {
-            // Si l'utilisateur n'est pas connecté, redirection vers la page de login
             return $this->redirectToRoute('app_login');
         }
-
-        // Assigner l'utilisateur à la recette
         $recette->setUtilisateur($utilisateur);
 
-        // Créer le formulaire
+        // Création et traitement du formulaire
         $form = $this->createForm(RecetteType::class, $recette);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Gestion du fichier photo
+            // Gestion de l'upload de la photo
             $photoFile = $form->get('photo')->getData();
             if ($photoFile) {
                 $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -45,34 +46,20 @@ class RecetteController extends AbstractController
 
                 try {
                     $photoFile->move(
-                        $this->getParameter('recettes_photos_directory'), // Paramètre configuré pour les uploads
+                        $this->getParameter('recettes_photos_directory'),
                         $newFilename
                     );
                 } catch (FileException $e) {
                     $this->addFlash('error', 'Erreur lors du téléchargement de l\'image.');
                     return $this->redirectToRoute('app_recette_create');
                 }
-
-                // Enregistrer le nom de fichier dans l'entité
                 $recette->setPhoto($newFilename);
             }
 
-            // Gestion des ingrédients sélectionnés
-            $selectedIngredients = $form->get('ingredients')->getData();
-            foreach ($selectedIngredients as $ingredient) {
-                $recetteIngredient = new RecetteIngredient();
-                $recetteIngredient->setRecette($recette);
-                $recetteIngredient->setIngredient($ingredient);
-
-                // Persister chaque recette_ingredient
-                $em->persist($recetteIngredient);
-            }
-
-            // Sauvegarder la recette
+            // Enregistrement de la recette et des ingrédients
             $em->persist($recette);
             $em->flush();
 
-            // Redirection ou message de succès
             $this->addFlash('success', 'La recette a été créée avec succès.');
             return $this->redirectToRoute('recette_show', ['id' => $recette->getId()]);
         }

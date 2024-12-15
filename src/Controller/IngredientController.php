@@ -62,35 +62,11 @@ class IngredientController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-    #[Route('/ajouter-ingredient-a-recette/{recetteId}', name: 'app_ajouter_ingredient_recette')]
-    public function ajouterIngredientRecette(
-        Request $request,
-        EntityManagerInterface $entityManager,
-        Recette $recette
-    ): Response {
-        // Créer un nouvel objet RecetteIngredient
-        $recetteIngredient = new RecetteIngredient();
-        $form = $this->createForm(RecetteIngredientType::class, $recetteIngredient);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Lier l'ingrédient existant à la recette
-            $ingredient = $form->get('ingredient')->getData(); // Assurez-vous que l'ingrédient est bien lié à ce formulaire
-            $recetteIngredient->setIngredient($ingredient);
-            $recetteIngredient->setRecette($recette);
-
-            // Persist l'objet RecetteIngredient
-            $entityManager->persist($recetteIngredient);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Ingrédient ajouté à la recette avec succès!');
-            return $this->redirectToRoute('recette_show', ['id' => $recette->getId()]);
-        }
-
-        return $this->render('recette/ajouter_ingredient.html.twig', [
-            'form' => $form->createView(),
-            'recette' => $recette,
+    #[Route('/ingredient/{id}', name: 'app_ingredient_show', methods: ['GET'])]
+    public function show(Ingredient $ingredient): Response
+    {
+        return $this->render('ingredient/show.html.twig', [
+            'ingredient' => $ingredient,
         ]);
     }
 }

@@ -85,21 +85,23 @@ class RecetteType extends AbstractType
                 'expanded' => true, // Affichage sous forme de cases à cocher
                 'mapped' => false, // Les ingrédients ne sont pas directement liés à Recette
             ])
-            ->add('quantite', IntegerType::class, [
-                'label' => 'Quantité',
-                'required' => true,
-                'attr' => ['min' => 1],
-                'mapped' => false, // Les ingrédients ne sont pas directement liés à Recette
-
-            ])
             ->add('recetteIngredients', CollectionType::class, [
-                'entry_type' => RecetteIngredientType::class,
-                'allow_add' => true,
-                'by_reference' => false,
-                'label' => 'Ingrédients',
+                'entry_type' => RecetteIngredientType::class, // Formulaire pour chaque association ingrédient/quantité
+                'entry_options' => [
+                    'label' => false,
+                ],
+                'allow_add' => true, // Permet d'ajouter dynamiquement des champs
+                'by_reference' => false, // Pour permettre la gestion de la collection
                 'mapped' => false, // Les ingrédients ne sont pas directement liés à Recette
-
             ]);
+        // ->add('recetteIngredients', CollectionType::class, [
+        //     'entry_type' => RecetteIngredientType::class,
+        //     'allow_add' => true,
+        //     'by_reference' => false,
+        //     'label' => 'Ingrédients',
+        //     'mapped' => false, // Les ingrédients ne sont pas directement liés à Recette
+
+        // ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

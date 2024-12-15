@@ -18,14 +18,14 @@ return [
     [ // $regexpList
         0 => '{^(?'
                 .'|/_error/(\\d+)(?:\\.([^/]++))?(*:35)'
-                .'|/ajouter\\-ingredient\\-a\\-recette/([^/]++)(*:83)'
-                .'|/recette/([^/]++)(*:107)'
+                .'|/ingredient/([^/]++)(*:62)'
+                .'|/recette/([^/]++)(*:86)'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
         35 => [[['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null]],
-        83 => [[['_route' => 'app_ajouter_ingredient_recette', '_controller' => 'App\\Controller\\IngredientController::ajouterIngredientRecette'], ['recetteId'], null, null, false, true, null]],
-        107 => [
+        62 => [[['_route' => 'app_ingredient_show', '_controller' => 'App\\Controller\\IngredientController::show'], ['id'], ['GET' => 0], null, false, true, null]],
+        86 => [
             [['_route' => 'recette_show', '_controller' => 'App\\Controller\\RecetteController::show'], ['id'], null, null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

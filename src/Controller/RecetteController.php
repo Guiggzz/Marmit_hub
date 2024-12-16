@@ -20,11 +20,6 @@ class RecetteController extends AbstractController
     {
         $recette = new Recette();
 
-        // Initialisation d'un ingrédient vide pour afficher un champ dans le formulaire
-        $recetteIngredient = new RecetteIngredient();
-        $recetteIngredient->setRecette($recette);
-        $recette->addRecetteIngredient($recetteIngredient);
-
         // Associer l'utilisateur connecté
         $utilisateur = $this->getUser();
         if (!$utilisateur) {
@@ -53,7 +48,18 @@ class RecetteController extends AbstractController
                     $this->addFlash('error', 'Erreur lors du téléchargement de l\'image.');
                     return $this->redirectToRoute('app_recette_create');
                 }
+
                 $recette->setPhoto($newFilename);
+            }
+
+            // Gérer manuellement les RecetteIngredients si nécessaire
+            $ingredientsData = $form->get('ingredients')->getData();
+            foreach ($ingredientsData as $ingredient) {
+                $recetteIngredient = new RecetteIngredient();
+                $recetteIngredient->setRecette($recette);
+                $recetteIngredient->setIngredient($ingredient);
+                $recette->addRecetteIngredient($recetteIngredient);
+                $em->persist($recetteIngredient);
             }
 
             // Enregistrement de la recette et des ingrédients
@@ -80,5 +86,28 @@ class RecetteController extends AbstractController
         return $this->render('recette/show.html.twig', [
             'recette' => $recette,
         ]);
+    }
+    #[Route('/recette/supprimer/{id}', name: 'recette_delete', methods: ['POST'])]
+    public function delete(int $id, EntityManagerInterface $em): Response
+    {
+        $recette = $em->getRepository(Recette::class)->find($id);
+
+        if (!$recette) {
+            throw $this->createNotFoundException('Recette non trouvée.');
+        }
+
+        // Vérification : l'utilisateur connecté est-il l'auteur ?
+        if ($recette->getUtilisateur() !== $this->getUser()) {
+            $this->addFlash('error', 'Vous n\'êtes pas autorisé à supprimer cette recette.');
+            return $this->redirectToRoute('app_home');
+        }
+
+        // Supprimer la recette
+        $em->remove($recette);
+        $em->flush();
+
+        $this->addFlash('success', 'La recette a été supprimée avec succès.');
+
+        return $this->redirectToRoute('app_home');
     }
 }

@@ -93,6 +93,7 @@ class RecetteType extends AbstractType
                 'allow_add' => true, // Permet d'ajouter dynamiquement des champs
                 'by_reference' => false, // Pour permettre la gestion de la collection
                 'mapped' => false, // Les ingrédients ne sont pas directement liés à Recette
+
             ]);
         // ->add('recetteIngredients', CollectionType::class, [
         //     'entry_type' => RecetteIngredientType::class,

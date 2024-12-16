@@ -1,36 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Accueil
+{% endblock %}
 
 {% block body %}
-<div class="container mx-auto px-6 py-10">
-    <h1 class="text-3xl font-bold text-orange-600 mb-6">Nos Recettes</h1>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for recette in recettes %}
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                {% if recette.photo %}
-                    <img 
-                        src="{{ asset('uploads/recettes/' ~ recette.photo) }}" 
-                        alt="{{ recette.nom }}" 
-                        class="w-full h-48 object-cover"
-                    >
-                {% else %}
-                    <div class="bg-gray-200 h-48 flex items-center justify-center text-gray-500">
-                        Pas d'image
-                    </div>
-                {% endif %}
-                <div class="p-6">
-                    <h5 class="text-xl font-bold text-gray-800 mb-2">{{ recette.nom }}</h5>
-                    <p class="text-gray-600 text-sm mb-2">⏱️ Durée : {{ recette.dureeTotale }} minutes</p>
-                    <p class="text-gray-600 text-sm mb-4">👥 Pour {{ recette.nombrePersonnes }} personne(s)</p>
-                    <a href="{{ path('recette_show', {'id': recette.id}) }}" class="inline-block text-orange-600 font-semibold hover:underline">
-                        Voir la recette →
-                    </a>
-                </div>
-            </div>
-        {% else %}
-            <p class="col-span-full text-center text-gray-600">Aucune recette disponible</p>
-        {% endfor %}
-    </div>
-</div>
+	<div class="container mx-auto px-6 py-10">
+		<h1 class="text-3xl font-bold text-orange-600 mb-6">Nos Recettes</h1>
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+			{% for recette in recettes %}
+				<div class="bg-white rounded-lg shadow-md overflow-hidden">
+					{% if recette.photo %}
+						<img src="{{ asset('uploads/recettes/' ~ recette.photo) }}" alt="{{ recette.nom }}" class="w-full h-48 object-cover">
+					{% else %}
+						<div class="bg-gray-200 h-48 flex items-center justify-center text-gray-500">
+							Pas d'image
+						</div>
+					{% endif %}
+					<div class="p-6">
+						<h5 class="text-xl font-bold text-gray-800 mb-2">{{ recette.nom }}</h5>
+						<p class="text-gray-600 text-sm mb-2">⏱️ Durée :
+							{{ recette.dureeTotale }}
+							minutes</p>
+						<p class="text-gray-600 text-sm mb-4">👥 Pour
+							{{ recette.nombrePersonnes }}
+							personne(s)</p>
+						<a href="{{ path('recette_show', {'id': recette.id}) }}" class="inline-block text-orange-600 font-semibold hover:underline">
+							Voir la recette →
+						</a>
+
+						{% if recette.utilisateur == app.user %}
+							<form action="{{ path('recette_delete', {'id': recette.id}) }}" method="post" class="mt-4">
+								<input type="hidden" name="_token" value="{{ csrf_token('delete_recette_' ~ recette.id) }}">
+								<button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400 transition">
+									Supprimer
+								</button>
+							</form>
+						{% endif %}
+					</div>
+				</div>
+			{% else %}
+				<p class="col-span-full text-center text-gray-600">Aucune recette disponible</p>
+			{% endfor %}
+		</div>
+	</div>
 {% endblock %}

@@ -79,4 +79,27 @@ class IngredientController extends AbstractController
             'ingredients' => $ingredients,
         ]);
     }
+    #[Route('/ingredient/{id}', name: 'ingredient_delete', methods: ['POST', 'DELETE'])]
+    public function delete(Request $request, Ingredient $ingredient, EntityManagerInterface $em): Response
+    {
+        // Vérifier que l'utilisateur est bien le créateur
+        if ($this->getUser() !== $ingredient->getUtilisateur()) {
+            throw $this->createAccessDeniedException("Vous n'êtes pas autorisé à supprimer cet ingrédient.");
+        }
+
+        // Vérifier que l'ingrédient n'est pas utilisé dans des recettes
+        if (count($ingredient->getRecetteIngredients()) > 0) {
+            $this->addFlash('error', 'Cet ingrédient est lié à des recettes et ne peut pas être supprimé.');
+            return $this->redirectToRoute('ingredient_show', ['id' => $ingredient->getId()]);
+        }
+
+        // Vérification CSRF
+        if ($this->isCsrfTokenValid('delete' . $ingredient->getId(), $request->request->get('_token'))) {
+            $em->remove($ingredient);
+            $em->flush();
+            $this->addFlash('success', 'Ingrédient supprimé avec succès.');
+        }
+
+        return $this->redirectToRoute('app_home');
+    }
 }

@@ -19,18 +19,23 @@ return [
     [ // $regexpList
         0 => '{^(?'
                 .'|/_error/(\\d+)(?:\\.([^/]++))?(*:35)'
-                .'|/ingredient/([^/]++)(*:62)'
+                .'|/ingredient/([^/]++)(?'
+                    .'|(*:65)'
+                .')'
                 .'|/recette/(?'
-                    .'|([^/]++)(*:89)'
-                    .'|supprimer/([^/]++)(*:114)'
+                    .'|([^/]++)(*:93)'
+                    .'|supprimer/([^/]++)(*:118)'
                 .')'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
         35 => [[['_route' => '_preview_error', '_controller' => 'error_controller::preview', '_format' => 'html'], ['code', '_format'], null, null, false, true, null]],
-        62 => [[['_route' => 'app_ingredient_show', '_controller' => 'App\\Controller\\IngredientController::show'], ['id'], ['GET' => 0], null, false, true, null]],
-        89 => [[['_route' => 'recette_show', '_controller' => 'App\\Controller\\RecetteController::show'], ['id'], null, null, false, true, null]],
-        114 => [
+        65 => [
+            [['_route' => 'app_ingredient_show', '_controller' => 'App\\Controller\\IngredientController::show'], ['id'], ['GET' => 0], null, false, true, null],
+            [['_route' => 'ingredient_delete', '_controller' => 'App\\Controller\\IngredientController::delete'], ['id'], ['POST' => 0, 'DELETE' => 1], null, false, true, null],
+        ],
+        93 => [[['_route' => 'recette_show', '_controller' => 'App\\Controller\\RecetteController::show'], ['id'], null, null, false, true, null]],
+        118 => [
             [['_route' => 'recette_delete', '_controller' => 'App\\Controller\\RecetteController::delete'], ['id'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

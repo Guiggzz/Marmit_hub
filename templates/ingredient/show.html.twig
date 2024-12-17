@@ -19,7 +19,9 @@
 				<h1 class="text-4xl font-bold text-center mt-4">{{ ingredient.nom }}</h1>
 			{% endif %}
 
-			<div class="p-6">
+			<div
+				class="p-6">
+				<!-- Informations sur le créateur -->
 				{% if ingredient.utilisateur %}
 					<div class="mt-6">
 						<p class="text-lg text-gray-600 font-medium">Créateur :</p>
@@ -27,17 +29,19 @@
 					</div>
 				{% endif %}
 
+				<!-- Utilisation dans les recettes -->
 				<div class="mt-10">
 					<h2 class="text-2xl font-semibold text-gray-800 mb-4">Utilisé dans les recettes :</h2>
-					{% set recettes = ingredient.recettes %}
-					{% if recettes|length > 0 %}
+					{% if ingredient.recetteIngredients|length > 0 %}
 						<ul class="space-y-2">
-							{% for recette in recettes %}
-								<li>
-									<a href="{{ path('recette_show', { id: recette.id }) }}" class="text-orange-600 hover:underline">
-										{{ recette.nom }}
-									</a>
-								</li>
+							{% for recetteIngredient in ingredient.recetteIngredients %}
+								{% if recetteIngredient.recette %}
+									<li>
+										<a href="{{ path('recette_show', { id: recetteIngredient.recette.id }) }}" class="text-orange-600 hover:underline">
+											{{ recetteIngredient.recette.nom }}
+										</a>
+									</li>
+								{% endif %}
 							{% endfor %}
 						</ul>
 					{% else %}
@@ -45,6 +49,20 @@
 					{% endif %}
 				</div>
 
+				<!-- Bouton Supprimer -->
+				{% if app.user and ingredient.utilisateur == app.user and ingredient.recetteIngredients|length == 0 %}
+					<div class="mt-6">
+						<form action="{{ path('ingredient_delete', { id: ingredient.id }) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet ingrédient ?');">
+							<input type="hidden" name="_method" value="DELETE">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ingredient.id) }}">
+							<button type="submit" class="btn bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-500 transition">
+								Supprimer l'ingrédient
+							</button>
+						</form>
+					</div>
+				{% endif %}
+
+				<!-- Bouton Retour -->
 				<div class="mt-6">
 					<a href="{{ path('app_home') }}" class="btn bg-orange-600 text-white px-6 py-3 rounded-md hover:bg-orange-500 transition">
 						Retour à l'accueil

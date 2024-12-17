@@ -6,12 +6,8 @@
 {% endblock %}
 
 {% block body %}
-	<div
-		class="container mx-auto px-6 py-10">
-		<!-- Card principale -->
-		<div
-			class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-			<!-- Image en haut, en pleine largeur -->
+	<div class="container mx-auto px-6 py-10">
+		<div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
 			{% if ingredient.photo %}
 				<div class="relative">
 					<img src="{{ asset('uploads/ingredients/' ~ ingredient.photo) }}" alt="{{ ingredient.nom }}" class="w-full h-64 object-cover">
@@ -23,10 +19,7 @@
 				<h1 class="text-4xl font-bold text-center mt-4">{{ ingredient.nom }}</h1>
 			{% endif %}
 
-			<!-- Contenu de l'ingrédient -->
-			<div
-				class="p-6">
-				<!-- Informations sur le créateur -->
+			<div class="p-6">
 				{% if ingredient.utilisateur %}
 					<div class="mt-6">
 						<p class="text-lg text-gray-600 font-medium">Créateur :</p>
@@ -34,7 +27,24 @@
 					</div>
 				{% endif %}
 
-				<!-- Bouton de retour -->
+				<div class="mt-10">
+					<h2 class="text-2xl font-semibold text-gray-800 mb-4">Utilisé dans les recettes :</h2>
+					{% set recettes = ingredient.recettes %}
+					{% if recettes|length > 0 %}
+						<ul class="space-y-2">
+							{% for recette in recettes %}
+								<li>
+									<a href="{{ path('recette_show', { id: recette.id }) }}" class="text-orange-600 hover:underline">
+										{{ recette.nom }}
+									</a>
+								</li>
+							{% endfor %}
+						</ul>
+					{% else %}
+						<p class="text-gray-500">Aucune recette n'utilise cet ingrédient pour l'instant.</p>
+					{% endif %}
+				</div>
+
 				<div class="mt-6">
 					<a href="{{ path('app_home') }}" class="btn bg-orange-600 text-white px-6 py-3 rounded-md hover:bg-orange-500 transition">
 						Retour à l'accueil

@@ -109,4 +109,19 @@ class Ingredient
 
         return $this;
     }
+    /**
+     * Retourne toutes les recettes associées à cet ingrédient.
+     *
+     * @return array
+     */
+    public function getRecettes(): array
+    {
+        $recettes = [];
+        foreach ($this->recetteIngredients as $recetteIngredient) {
+            if ($recetteIngredient->getRecette()) {
+                $recettes[] = $recetteIngredient->getRecette();
+            }
+        }
+        return $recettes;
+    }
 }

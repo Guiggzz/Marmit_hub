@@ -69,4 +69,14 @@ class IngredientController extends AbstractController
             'ingredient' => $ingredient,
         ]);
     }
+    #[Route('/ingredients', name: 'app_ingredients_list', methods: ['GET'])]
+    public function listIngredients(EntityManagerInterface $entityManager): Response
+    {
+        // Récupère tous les ingrédients depuis la base de données
+        $ingredients = $entityManager->getRepository(Ingredient::class)->findAll();
+
+        return $this->render('ingredient/ingredient_show.html.twig', [
+            'ingredients' => $ingredients,
+        ]);
+    }
 }

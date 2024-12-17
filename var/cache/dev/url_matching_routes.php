@@ -26,6 +26,10 @@ return [
                     .'|([^/]++)(*:93)'
                     .'|supprimer/([^/]++)(*:118)'
                 .')'
+                .'|/commentaire/(?'
+                    .'|add/([^/]++)(*:155)'
+                    .'|delete/([^/]++)(*:178)'
+                .')'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
@@ -35,8 +39,10 @@ return [
             [['_route' => 'ingredient_delete', '_controller' => 'App\\Controller\\IngredientController::delete'], ['id'], ['POST' => 0, 'DELETE' => 1], null, false, true, null],
         ],
         93 => [[['_route' => 'recette_show', '_controller' => 'App\\Controller\\RecetteController::show'], ['id'], null, null, false, true, null]],
-        118 => [
-            [['_route' => 'recette_delete', '_controller' => 'App\\Controller\\RecetteController::delete'], ['id'], ['POST' => 0], null, false, true, null],
+        118 => [[['_route' => 'recette_delete', '_controller' => 'App\\Controller\\RecetteController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
+        155 => [[['_route' => 'commentaire_add', '_controller' => 'App\\Controller\\CommentaireController::addCommentaire'], ['recetteId'], ['POST' => 0], null, false, true, null]],
+        178 => [
+            [['_route' => 'commentaire_delete', '_controller' => 'App\\Controller\\CommentaireController::deleteCommentaire'], ['id'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

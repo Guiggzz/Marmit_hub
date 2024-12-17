@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Recette;
 use App\Entity\RecetteIngredient;
+use App\Entity\Commentaire;
 use App\Form\RecetteType;
+use App\Form\CommentaireType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,17 +78,37 @@ class RecetteController extends AbstractController
     }
 
     #[Route('/recette/{id}', name: 'recette_show')]
-    public function show(int $id, EntityManagerInterface $em): Response
+    public function show(int $id, Request $request, EntityManagerInterface $em): Response
     {
         $recette = $em->getRepository(Recette::class)->find($id);
         if (!$recette) {
             throw $this->createNotFoundException('Recette non trouvée.');
         }
 
+        // Création d'un formulaire pour le commentaire
+        // Lors de la création d'un commentaire dans le contrôleur
+        $commentaire = new Commentaire();
+        $commentaire->setRecette($recette);
+        $commentaire->setUtilisateur($this->getUser());  // Lier l'utilisateur connecté au commentaire
+        $commentaire->setDate(new \DateTime());
+
+        $formCommentaire = $this->createForm(CommentaireType::class, $commentaire);
+        $formCommentaire->handleRequest($request);
+
+        if ($formCommentaire->isSubmitted() && $formCommentaire->isValid()) {
+            $em->persist($commentaire);
+            $em->flush();
+
+            $this->addFlash('success', 'Commentaire ajouté avec succès.');
+            return $this->redirectToRoute('recette_show', ['id' => $recette->getId()]);
+        }
+
         return $this->render('recette/show.html.twig', [
             'recette' => $recette,
+            'formCommentaire' => $formCommentaire->createView(),
         ]);
     }
+
     #[Route('/recette/supprimer/{id}', name: 'recette_delete', methods: ['POST'])]
     public function delete(int $id, EntityManagerInterface $em): Response
     {
@@ -109,5 +131,25 @@ class RecetteController extends AbstractController
         $this->addFlash('success', 'La recette a été supprimée avec succès.');
 
         return $this->redirectToRoute('app_home');
+    }
+    #[Route('/commentaire/ajouter/{recetteId}', name: 'commentaire_add', methods: ['POST'])]
+    public function add(int $recetteId, Request $request, EntityManagerInterface $em): Response
+    {
+        $recette = $em->getRepository(Recette::class)->find($recetteId);
+        if (!$recette) {
+            throw $this->createNotFoundException('Recette non trouvée.');
+        }
+
+        $commentaire = new Commentaire();
+        $commentaire->setRecette($recette);
+        $commentaire->setTexte($request->request->get('texte'));
+        $commentaire->setDate(new \DateTime());
+
+        $em->persist($commentaire);
+        $em->flush();
+
+        $this->addFlash('success', 'Commentaire ajouté avec succès.');
+
+        return $this->redirectToRoute('recette_show', ['id' => $recetteId]);
     }
 }

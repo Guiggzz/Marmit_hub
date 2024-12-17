@@ -47,10 +47,12 @@ class Recette
     #[ORM\OneToMany(mappedBy: 'recette', targetEntity: RecetteIngredient::class, orphanRemoval: true, cascade: ["persist"])]
     private Collection $recetteIngredients;
 
+
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
         $this->recetteIngredients = new ArrayCollection();  // Initialisation de la collection
+        $this->commentaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -191,6 +193,19 @@ class Recette
                 $recetteIngredient->setRecette(null);
             }
         }
+
+        return $this;
+    }
+    private ?string $description = null;
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

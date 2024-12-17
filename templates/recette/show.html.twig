@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Recette -
+{% block title %}
+	Recette -
 	{{ recette.nom }}
 {% endblock %}
 
@@ -52,7 +53,6 @@
 					<ul class="space-y-2">
 						{% for ingredient in recette.ingredients %}
 							<li>
-								<!-- Lien vers la page de l'ingrédient -->
 								<a href="{{ path('app_ingredient_show', { id: ingredient.id }) }}" class="text-orange-600 hover:underline">
 									{{ ingredient.nom }}
 								</a>
@@ -60,6 +60,39 @@
 						{% endfor %}
 					</ul>
 				</div>
+
+				<!-- Affichage des commentaires -->
+				<div class="mt-10">
+					<h2 class="text-2xl font-semibold text-gray-800 mb-4">Commentaires :</h2>
+					{% if recette.commentaires is not empty %}
+						<ul class="space-y-2">
+							{% for commentaire in recette.commentaires %}
+								<li>
+									<p class="text-gray-800">
+										<strong>{{ commentaire.utilisateur.username }}</strong>
+										-
+										{{ commentaire.date|date('d/m/Y H:i') }}
+									</p>
+									<p class="text-gray-600">{{ commentaire.texte }}</p>
+								</li>
+							{% endfor %}
+						</ul>
+					{% else %}
+						<p class="text-gray-500">Aucun commentaire pour cette recette pour l'instant.</p>
+					{% endif %}
+				</div>
+
+				<!-- Formulaire d'ajout de commentaire -->
+				{% if app.user %}
+					<div class="mt-6">
+						<form action="{{ path('commentaire_add', { 'recetteId': recette.id }) }}" method="POST">
+							<textarea name="texte" placeholder="Ajouter un commentaire" required></textarea>
+							<button type="submit">Envoyer</button>
+						</form>
+					</div>
+				{% else %}
+					<p class="mt-4 text-gray-600">Vous devez être connecté pour ajouter un commentaire.</p>
+				{% endif %}
 
 				<!-- Bouton de retour -->
 				<div class="mt-6">

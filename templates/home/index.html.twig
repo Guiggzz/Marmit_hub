@@ -29,12 +29,18 @@
 						</a>
 
 						{% if recette.utilisateur == app.user %}
-							<form action="{{ path('recette_delete', {'id': recette.id}) }}" method="post" class="mt-4">
-								<input type="hidden" name="_token" value="{{ csrf_token('delete_recette_' ~ recette.id) }}">
-								<button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400 transition">
-									Supprimer
-								</button>
-							</form>
+							<div class="mt-4 flex space-x-4">
+								<a href="{{ path('recette_edit', {'id': recette.id}) }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-400 transition">
+									Modifier
+								</a>
+
+								<form action="{{ path('recette_delete', {'id': recette.id}) }}" method="post" class="mt-4">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete_recette_' ~ recette.id) }}">
+									<button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400 transition">
+										Supprimer
+									</button>
+								</form>
+							</div>
 						{% endif %}
 					</div>
 				</div>

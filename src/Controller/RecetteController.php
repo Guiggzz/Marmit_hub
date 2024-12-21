@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use App\Repository\RecetteRepository;
 
 class RecetteController extends AbstractController
 {
@@ -54,14 +55,17 @@ class RecetteController extends AbstractController
                 $recette->setPhoto($newFilename);
             }
 
-            // Gérer manuellement les RecetteIngredients si nécessaire
+            // Gérer manuellement les RecetteIngredients
             $ingredientsData = $form->get('ingredients')->getData();
             foreach ($ingredientsData as $ingredient) {
-                $recetteIngredient = new RecetteIngredient();
-                $recetteIngredient->setRecette($recette);
-                $recetteIngredient->setIngredient($ingredient);
-                $recette->addRecetteIngredient($recetteIngredient);
-                $em->persist($recetteIngredient);
+                // Vérifier si l'ingrédient est déjà présent
+                if (!$recette->getIngredients()->contains($ingredient)) {
+                    $recetteIngredient = new RecetteIngredient();
+                    $recetteIngredient->setRecette($recette);
+                    $recetteIngredient->setIngredient($ingredient);
+                    $recette->addRecetteIngredient($recetteIngredient);
+                    $em->persist($recetteIngredient);
+                }
             }
 
             // Enregistrement de la recette et des ingrédients
@@ -132,24 +136,80 @@ class RecetteController extends AbstractController
 
         return $this->redirectToRoute('app_home');
     }
-    #[Route('/commentaire/ajouter/{recetteId}', name: 'commentaire_add', methods: ['POST'])]
-    public function add(int $recetteId, Request $request, EntityManagerInterface $em): Response
+
+    #[Route('/recette/{id}/edit', name: 'recette_edit')]
+    public function edit(int $id, RecetteRepository $recetteRepository, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
-        $recette = $em->getRepository(Recette::class)->find($recetteId);
+        // Trouve la recette à éditer
+        $recette = $recetteRepository->find($id);
+
         if (!$recette) {
-            throw $this->createNotFoundException('Recette non trouvée.');
+            throw $this->createNotFoundException('Recette non trouvée');
         }
 
-        $commentaire = new Commentaire();
-        $commentaire->setRecette($recette);
-        $commentaire->setTexte($request->request->get('texte'));
-        $commentaire->setDate(new \DateTime());
+        // Vérifie si l'utilisateur connecté est bien celui qui a créé la recette
+        if ($recette->getUtilisateur() !== $this->getUser()) {
+            $this->addFlash('error', 'Vous ne pouvez pas modifier cette recette.');
+            return $this->redirectToRoute('recette_index');
+        }
 
-        $em->persist($commentaire);
-        $em->flush();
+        // Crée le formulaire d'édition
+        $form = $this->createForm(RecetteType::class, $recette);
+        $form->handleRequest($request);
 
-        $this->addFlash('success', 'Commentaire ajouté avec succès.');
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Gestion de l'upload de la nouvelle photo si présente
+            $photoFile = $form->get('photo')->getData();
+            if ($photoFile) {
+                $originalFilename = pathinfo($photoFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $photoFile->guessExtension();
 
-        return $this->redirectToRoute('recette_show', ['id' => $recetteId]);
+                try {
+                    $photoFile->move(
+                        $this->getParameter('recettes_photos_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Erreur lors du téléchargement de l\'image.');
+                    return $this->redirectToRoute('recette_edit', ['id' => $recette->getId()]);
+                }
+
+                $recette->setPhoto($newFilename);
+            }
+
+            // Mettre à jour les RecetteIngredients
+            $ingredientsData = $form->get('ingredients')->getData();
+
+            // Supprimer les ingrédients non inclus dans le formulaire
+            foreach ($recette->getRecetteIngredients() as $recetteIngredient) {
+                if (!$ingredientsData->contains($recetteIngredient->getIngredient())) {
+                    $recette->removeRecetteIngredient($recetteIngredient);
+                    $entityManager->remove($recetteIngredient);
+                }
+            }
+
+            // Ajouter les nouveaux ingrédients
+            foreach ($ingredientsData as $ingredient) {
+                if (!$recette->getIngredients()->contains($ingredient)) {
+                    $recetteIngredient = new RecetteIngredient();
+                    $recetteIngredient->setRecette($recette);
+                    $recetteIngredient->setIngredient($ingredient);
+                    $recette->addRecetteIngredient($recetteIngredient);
+                    $entityManager->persist($recetteIngredient);
+                }
+            }
+
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Recette modifiée avec succès.');
+
+            return $this->redirectToRoute('recette_show', ['id' => $recette->getId()]);
+        }
+
+        return $this->render('recette/modifRecette.html.twig', [
+            'form' => $form->createView(),
+            'recette' => $recette,
+        ]);
     }
 }

@@ -38,9 +38,8 @@ class Recette
     /**
      * @var Collection<int, Commentaire>
      */
-    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'recette', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'recette', orphanRemoval: true, cascade: ['persist'])]
     private Collection $commentaires;
-
     /**
      * @var Collection<int, RecetteIngredient>
      */
@@ -82,6 +81,14 @@ class Recette
         $this->texte = $texte;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, RecetteIngredient>
+     */
+    public function getRecetteIngredients(): Collection
+    {
+        return $this->recetteIngredients;
     }
 
     public function getDureeTotale(): ?int
@@ -176,11 +183,16 @@ class Recette
     public function addRecetteIngredient(RecetteIngredient $recetteIngredient): static
     {
         // Vérifie si l'association existe déjà
-        if (!$this->recetteIngredients->contains($recetteIngredient)) {
-            $this->recetteIngredients->add($recetteIngredient);
-            // Définit la recette sur l'ingrédient
-            $recetteIngredient->setRecette($this);
+        foreach ($this->recetteIngredients as $existingRecetteIngredient) {
+            if ($existingRecetteIngredient->getIngredient() === $recetteIngredient->getIngredient()) {
+                // Si l'ingrédient est déjà associé, ne rien faire
+                return $this;
+            }
         }
+
+        // Ajoute l'association si elle n'existe pas
+        $this->recetteIngredients->add($recetteIngredient);
+        $recetteIngredient->setRecette($this);
 
         return $this;
     }

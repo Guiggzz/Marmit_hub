@@ -25,10 +25,11 @@ return [
                 .'|/recette/(?'
                     .'|([^/]++)(*:93)'
                     .'|supprimer/([^/]++)(*:118)'
+                    .'|([^/]++)/edit(*:139)'
                 .')'
                 .'|/commentaire/(?'
-                    .'|add/([^/]++)(*:155)'
-                    .'|delete/([^/]++)(*:178)'
+                    .'|add/([^/]++)(*:176)'
+                    .'|delete/([^/]++)(*:199)'
                 .')'
             .')/?$}sDu',
     ],
@@ -40,8 +41,9 @@ return [
         ],
         93 => [[['_route' => 'recette_show', '_controller' => 'App\\Controller\\RecetteController::show'], ['id'], null, null, false, true, null]],
         118 => [[['_route' => 'recette_delete', '_controller' => 'App\\Controller\\RecetteController::delete'], ['id'], ['POST' => 0], null, false, true, null]],
-        155 => [[['_route' => 'commentaire_add', '_controller' => 'App\\Controller\\CommentaireController::addCommentaire'], ['recetteId'], ['POST' => 0], null, false, true, null]],
-        178 => [
+        139 => [[['_route' => 'recette_edit', '_controller' => 'App\\Controller\\RecetteController::edit'], ['id'], null, null, false, false, null]],
+        176 => [[['_route' => 'commentaire_add', '_controller' => 'App\\Controller\\CommentaireController::addCommentaire'], ['recetteId'], ['POST' => 0], null, false, true, null]],
+        199 => [
             [['_route' => 'commentaire_delete', '_controller' => 'App\\Controller\\CommentaireController::deleteCommentaire'], ['id'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

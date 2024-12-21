@@ -12,3 +12,7 @@ commentaire_delete:
   path: /commentaire/delete/{id}
   controller: App\Controller\CommentaireController::deleteCommentaire
   methods: POST
+
+recette_edit:
+  path: /recette/{id}/edit
+  controller: App\Controller\RecetteController::edit

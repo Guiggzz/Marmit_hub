@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Repository\IngredientRepository;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class IngredientController extends AbstractController
 {
@@ -101,5 +103,93 @@ class IngredientController extends AbstractController
         }
 
         return $this->redirectToRoute('app_home');
+    }
+    /**
+     * @Route("/ingredient/{id}/edit", name="ingredient_edit")
+     */
+    public function edit(Request $request, IngredientRepository $ingredientRepository, Ingredient $ingredient): Response
+    {
+        $form = $this->createForm(IngredientType::class, $ingredient);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Traitement de l'image téléchargée
+            $photo = $form->get('photo')->getData();
+            if ($photo) {
+                // Déplacement du fichier vers le répertoire approprié
+                $photoFilename = md5(uniqid()) . '.' . $photo->guessExtension();
+                $photo->move(
+                    $this->getParameter('ingredients_directory'),
+                    $photoFilename
+                );
+                $ingredient->setPhoto($photoFilename);
+            }
+
+            // Sauvegarde de l'entité
+            $ingredientRepository->save($ingredient, true);
+
+            $this->addFlash('success', 'Ingrédient mis à jour avec succès !');
+
+            return $this->redirectToRoute('ingredient_show', ['id' => $ingredient->getId()]);
+        }
+
+        return $this->render('ingredient/edit.html.twig', [
+            'ingredient' => $ingredient,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    public function update(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager): Response
+    {
+        // Création du formulaire
+        $form = $this->createForm(IngredientType::class, $ingredient);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Récupérer le fichier téléchargé
+            /** @var UploadedFile $photoFile */
+            $photoFile = $form->get('photo')->getData();
+
+            if ($photoFile) {
+                // Supprimer l'ancienne image si elle existe
+                $oldPhoto = $ingredient->getPhoto();
+                if ($oldPhoto) {
+                    // Supprimer l'ancienne image du dossier
+                    $oldPhotoPath = $this->getParameter('kernel.project_dir') . '/public/uploads/ingredients/' . $oldPhoto;
+                    if (file_exists($oldPhotoPath)) {
+                        unlink($oldPhotoPath);  // Supprimer l'ancienne image
+                    }
+                }
+
+                // Générer un nom unique pour la nouvelle image
+                $newFilename = uniqid() . '.' . $photoFile->guessExtension();
+
+                // Déplacer le fichier vers le répertoire de destination
+                try {
+                    $photoFile->move(
+                        $this->getParameter('kernel.project_dir') . '/public/uploads/ingredients',
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // Gérer l'exception si quelque chose va mal avec l'upload
+                    $this->addFlash('error', 'Une erreur est survenue lors de l\'upload de l\'image.');
+                    return $this->redirectToRoute('app_ingredients_list'); // Rediriger ou afficher un message d'erreur
+                }
+
+                // Mettre à jour le champ photo avec le nouveau nom de fichier
+                $ingredient->setPhoto($newFilename);
+            }
+
+            // Enregistrer les changements dans la base de données
+            $entityManager->flush();
+
+            // Redirection après la mise à jour
+            return $this->redirectToRoute('app_ingredients_list');
+        }
+
+        // Afficher le formulaire d'édition
+        return $this->render('ingredient/ingredient_edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }

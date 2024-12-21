@@ -15,6 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use App\Repository\RecetteRepository;
+use App\Repository\IngredientRepository;
+use App\Form\IngredientType;
 
 class RecetteController extends AbstractController
 {
@@ -210,6 +212,39 @@ class RecetteController extends AbstractController
         return $this->render('recette/modifRecette.html.twig', [
             'form' => $form->createView(),
             'recette' => $recette,
+        ]);
+    }
+    #[Route('/ingredient/{id}/update', name: 'app_ingredient_update')]
+    public function update(
+        int $id,
+        IngredientRepository $ingredientRepository,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
+        $ingredient = $ingredientRepository->find($id);
+
+        if (!$ingredient) {
+            throw $this->createNotFoundException('Ingrédient non trouvé.');
+        }
+
+        // Vérifier que l'utilisateur connecté est le créateur
+        if ($ingredient->getUtilisateur() !== $this->getUser()) {
+            $this->addFlash('error', 'Vous ne pouvez pas modifier cet ingrédient.');
+            return $this->redirectToRoute('app_ingredient_list');
+        }
+
+        $form = $this->createForm(IngredientType::class, $ingredient);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Ingrédient modifié avec succès.');
+            return $this->redirectToRoute('app_ingredient_list');
+        }
+
+        return $this->render('ingredient/update.html.twig', [
+            'form' => $form->createView(),
+            'ingredient' => $ingredient,
         ]);
     }
 }

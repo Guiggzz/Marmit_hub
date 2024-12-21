@@ -16,3 +16,11 @@ commentaire_delete:
 recette_edit:
   path: /recette/{id}/edit
   controller: App\Controller\RecetteController::edit
+
+ingredient_edit:
+  path: /ingredient/{id}/edit
+  controller: App\Controller\IngredientController::edit
+
+app_ingredient_list:
+  path: /ingredients
+  controller: App\Controller\IngredientController::list

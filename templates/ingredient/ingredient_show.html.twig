@@ -14,9 +14,9 @@
 						class="bg-white shadow rounded-lg overflow-hidden">
 						<!-- Photo de l'ingrédient -->
 						{% if ingredient.photo %}
-							<img src="{{ asset('uploads/ingredients/' ~ ingredient.photo) }}" alt="{{ ingredient.nom }}" class="w-full h-40 object-cover">
+							<img src="{{ asset('uploads/ingredients/' ~ ingredient.photo) }}" alt="{{ ingredient.nom }}" class="w-full h-64 object-cover">
 						{% else %}
-							<div class="w-full h-40 bg-gray-200 flex items-center justify-center text-gray-500">
+							<div class="w-full h-64 bg-gray-200 flex items-center justify-center text-gray-500">
 								Pas d'image
 							</div>
 						{% endif %}
@@ -24,25 +24,26 @@
 						<!-- Contenu de l'ingrédient -->
 						<div class="p-4">
 							<h2 class="text-lg font-semibold text-gray-800">{{ ingredient.nom }}</h2>
-							{# <p class="text-sm text-gray-600 mt-2">{{ ingredient.description }}</p> #}
-						{# <p class="text-sm text-gray-600 mt-2"> #}
-							{# Quantité : #}
-							{# <span class="text-orange-600">{{ ingredient.quantite }} #}
-							{# {{ ingredient.unite }} #}
-							{# </p> #}
-						</span>
-					</p>
-
-					<!-- Bouton pour voir les détails -->
-					<div class="mt-4">
-						<a href="{{ path('app_ingredient_show', { id: ingredient.id }) }}" class="text-orange-600 hover:underline">
-							Voir plus
-						</a>
+							<!-- Bouton pour voir les détails -->
+							<div class="mt-4">
+								<a href="{{ path('app_ingredient_show', { id: ingredient.id }) }}" class="text-orange-600 hover:underline">
+									Voir plus
+								</a>
+							</div>
+							<!-- Bouton Modifier si l'utilisateur est le créateur -->
+							{% if ingredient.utilisateur == app.user %}
+								<div class="mt-2">
+									<a href="{{ path('app_ingredient_update', { id: ingredient.id }) }}" class="text-blue-600 hover:underline">
+										Modifier
+									</a>
+								</div>
+							{% endif %}
+						</div>
 					</div>
-				</div>
+				{% endfor %}
 			</div>
-		{% endfor %}
+		{% else %}
+			<p class="text-gray-500">Aucun ingrédient disponible pour le moment.</p>
+		{% endif %}
 	</div>
-{% else %}
-	<p class="text-gray-500">Aucun ingrédient disponible pour le moment.</p>
-{% endif %}</div>{% endblock %}
+{% endblock %}

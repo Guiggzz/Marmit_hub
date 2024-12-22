@@ -237,6 +237,13 @@
         <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\RecetteController"/>
       </call>
     </service>
+    <service id="App\Controller\RecipeController" class="App\Controller\RecipeController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\RecipeController"/>
+      </call>
+    </service>
     <service id="App\Controller\RegistrationController" class="App\Controller\RegistrationController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="container.service_subscriber"/>
@@ -316,7 +323,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.bpctQHJ"/>
+      <argument type="service" id=".service_locator.DJoY2iT"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -1608,7 +1615,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.bpctQHJ"/>
+      <argument type="service" id=".service_locator.DJoY2iT"/>
     </service>
     <service id="routing.resolver" class="Symfony\Component\Config\Loader\LoaderResolver">
       <call method="addLoader">
@@ -4279,6 +4286,9 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RecetteController" class="App\Controller\RecetteController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RecetteController" class="App\Controller\RecetteController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\RecetteController" class="App\Controller\RecetteController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RecipeController" class="App\Controller\RecipeController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RecipeController" class="App\Controller\RecipeController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\RecipeController" class="App\Controller\RecipeController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -4818,7 +4828,7 @@
         <argument key="authenticationUtils" type="service_closure" id="security.authentication_utils"/>
       </argument>
     </service>
-    <service id=".service_locator.bpctQHJ" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.DJoY2iT" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
@@ -4837,6 +4847,7 @@
         <argument key="App\Controller\RecetteController::delete" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\RecetteController::edit" type="service_closure" id=".service_locator.Sb_19oI"/>
         <argument key="App\Controller\RecetteController::update" type="service_closure" id=".service_locator.vyvHPaB"/>
+        <argument key="App\Controller\RecipeController::search" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\RegistrationController::register" type="service_closure" id=".service_locator.jpvOrpT"/>
         <argument key="App\Controller\SecurityController::login" type="service_closure" id=".service_locator.rSTd.nA"/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
@@ -4853,6 +4864,7 @@
         <argument key="App\Controller\RecetteController:delete" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\RecetteController:edit" type="service_closure" id=".service_locator.Sb_19oI"/>
         <argument key="App\Controller\RecetteController:update" type="service_closure" id=".service_locator.vyvHPaB"/>
+        <argument key="App\Controller\RecipeController:search" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\RegistrationController:register" type="service_closure" id=".service_locator.jpvOrpT"/>
         <argument key="App\Controller\SecurityController:login" type="service_closure" id=".service_locator.rSTd.nA"/>
       </argument>
@@ -5189,6 +5201,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.O2p6Lk7" method="withContext"/>
     </service>
+    <service id=".service_locator.O2p6Lk7.App\Controller\RecipeController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\RecipeController"/>
+      <argument>App\Controller\RecipeController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.O2p6Lk7" method="withContext"/>
+    </service>
     <service id=".service_locator.O2p6Lk7.App\Controller\RegistrationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\RegistrationController"/>
       <argument>App\Controller\RegistrationController</argument>
@@ -5335,6 +5353,7 @@
           <argument>App\Controller\HomeController</argument>
           <argument>App\Controller\IngredientController</argument>
           <argument>App\Controller\RecetteController</argument>
+          <argument>App\Controller\RecipeController</argument>
           <argument>App\Controller\RegistrationController</argument>
           <argument>App\Controller\SecurityController</argument>
           <argument>Doctrine\Bundle\DoctrineBundle\Controller\ProfilerController</argument>
@@ -6195,7 +6214,7 @@
     <service id="Twig\Environment" alias="twig"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.bpctQHJ"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.DJoY2iT"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface" alias="logger"/>

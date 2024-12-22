@@ -35,6 +35,11 @@ class Recette
     #[ORM\JoinColumn(nullable: false)]
     private ?User $utilisateur = null;
 
+    #[ORM\ManyToMany(targetEntity: Ingredient::class, inversedBy: 'recettes')]
+    #[ORM\JoinTable(name: 'recette_ingredient')]
+    private $ingredients;
+
+
     /**
      * @var Collection<int, Commentaire>
      */
@@ -52,6 +57,7 @@ class Recette
         $this->commentaires = new ArrayCollection();
         $this->recetteIngredients = new ArrayCollection();  // Initialisation de la collection
         $this->commentaires = new ArrayCollection();
+        $this->ingredients = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -175,11 +181,10 @@ class Recette
     {
         $ingredients = new ArrayCollection();
         foreach ($this->recetteIngredients as $recetteIngredient) {
-            $ingredients->add($recetteIngredient->getIngredient()); // Récupérer l'ingredient lié
+            $ingredients->add($recetteIngredient->getIngredient());
         }
         return $ingredients;
     }
-
     public function addRecetteIngredient(RecetteIngredient $recetteIngredient): static
     {
         // Vérifie si l'association existe déjà
@@ -220,5 +225,15 @@ class Recette
         $this->description = $description;
 
         return $this;
+    }
+    public function hasIngredient(string $ingredientNom): bool
+    {
+        foreach ($this->ingredients as $ingredient) {
+            if ($ingredient->getNom() === $ingredientNom) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -15,6 +15,7 @@ return [
             [['_route' => 'app_ingredient_list', '_controller' => 'App\\Controller\\IngredientController::list'], null, null, null, false, false, null],
         ],
         '/recette/nouvelle' => [[['_route' => 'app_recette_create', '_controller' => 'App\\Controller\\RecetteController::create'], null, null, null, false, false, null]],
+        '/search' => [[['_route' => 'app_recipe_search', '_controller' => 'App\\Controller\\RecipeController::search'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/register' => [[['_route' => 'app_register', '_controller' => 'App\\Controller\\RegistrationController::register'], null, null, null, false, false, null]],
         '/login' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\SecurityController::login'], null, null, null, false, false, null]],
         '/logout' => [[['_route' => 'app_logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, null, null, false, false, null]],

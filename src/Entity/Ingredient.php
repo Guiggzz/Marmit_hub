@@ -48,7 +48,6 @@ class Ingredient
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
-
         return $this;
     }
 
@@ -60,7 +59,6 @@ class Ingredient
     public function setUtilisateur(?User $utilisateur): self
     {
         $this->utilisateur = $utilisateur;
-
         return $this;
     }
 
@@ -106,9 +104,9 @@ class Ingredient
     public function setPhoto(?string $photo): self
     {
         $this->photo = $photo;
-
         return $this;
     }
+
     /**
      * Retourne toutes les recettes associées à cet ingrédient.
      *

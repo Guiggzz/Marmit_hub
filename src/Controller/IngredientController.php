@@ -107,6 +107,9 @@ class IngredientController extends AbstractController
     /**
      * @Route("/ingredient/{id}/edit", name="ingredient_edit")
      */
+    /**
+     * @Route("/ingredient/{id}/edit", name="ingredient_edit")
+     */
     public function edit(Request $request, IngredientRepository $ingredientRepository, Ingredient $ingredient): Response
     {
         $form = $this->createForm(IngredientType::class, $ingredient);
@@ -116,10 +119,19 @@ class IngredientController extends AbstractController
             // Traitement de l'image téléchargée
             $photo = $form->get('photo')->getData();
             if ($photo) {
-                // Déplacement du fichier vers le répertoire approprié
-                $photoFilename = md5(uniqid()) . '.' . $photo->guessExtension();
+                // Supprimer l'ancienne image si elle existe
+                $oldPhoto = $ingredient->getPhoto();
+                if ($oldPhoto) {
+                    $oldPhotoPath = $this->getParameter('kernel.project_dir') . '/public/uploads/ingredients/' . $oldPhoto;
+                    if (file_exists($oldPhotoPath)) {
+                        unlink($oldPhotoPath);  // Supprimer l'ancienne image
+                    }
+                }
+
+                // Générer un nom unique pour la nouvelle image
+                $photoFilename = uniqid() . '.' . $photo->guessExtension();
                 $photo->move(
-                    $this->getParameter('ingredients_directory'),
+                    $this->getParameter('kernel.project_dir') . '/public/uploads/ingredients',
                     $photoFilename
                 );
                 $ingredient->setPhoto($photoFilename);
@@ -133,13 +145,13 @@ class IngredientController extends AbstractController
             return $this->redirectToRoute('ingredient_show', ['id' => $ingredient->getId()]);
         }
 
-        return $this->render('ingredient/edit.html.twig', [
+        return $this->render('ingredient/ingredient_edit.html.twig', [
             'ingredient' => $ingredient,
             'form' => $form->createView(),
         ]);
     }
 
-    public function update(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager): Response
+    public function update(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         // Création du formulaire
         $form = $this->createForm(IngredientType::class, $ingredient);
@@ -180,11 +192,12 @@ class IngredientController extends AbstractController
                 $ingredient->setPhoto($newFilename);
             }
 
-            // Enregistrer les changements dans la base de données
-            $entityManager->flush();
+            // Sauvegarder l'entité
+            $entityManager->flush();  // Cette ligne persiste les modifications, y compris la mise à jour de la photo
 
             // Redirection après la mise à jour
-            return $this->redirectToRoute('app_ingredients_list');
+            $this->addFlash('success', 'Ingrédient mis à jour avec succès !');
+            return $this->redirectToRoute('ingredient_show', ['id' => $ingredient->getId()]);
         }
 
         // Afficher le formulaire d'édition

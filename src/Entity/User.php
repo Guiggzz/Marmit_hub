@@ -16,10 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 #[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+
 
     #[ORM\Column(length: 180)]
     private ?string $username = null;
@@ -70,6 +67,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Recette::class, mappedBy: 'utilisateur_id', orphanRemoval: true)]
     private Collection $user_recette;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private int $id;
+
 
     public function __construct()
     {

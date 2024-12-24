@@ -18,6 +18,7 @@ use App\Repository\RecetteRepository;
 use App\Repository\IngredientRepository;
 use App\Form\IngredientType;
 
+
 class RecetteController extends AbstractController
 {
     #[Route('/recette/nouvelle', name: 'app_recette_create')]
@@ -84,18 +85,22 @@ class RecetteController extends AbstractController
     }
 
     #[Route('/recette/{id}', name: 'recette_show')]
-    public function show(int $id, Request $request, EntityManagerInterface $em): Response
-    {
+    public function show(
+        int $id,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
         $recette = $em->getRepository(Recette::class)->find($id);
+
         if (!$recette) {
             throw $this->createNotFoundException('Recette non trouvée.');
         }
 
-        // Création d'un formulaire pour le commentaire
-        // Lors de la création d'un commentaire dans le contrôleur
+
+        // Création du formulaire pour le commentaire
         $commentaire = new Commentaire();
         $commentaire->setRecette($recette);
-        $commentaire->setUtilisateur($this->getUser());  // Lier l'utilisateur connecté au commentaire
+        $commentaire->setUtilisateur($this->getUser());
         $commentaire->setDate(new \DateTime());
 
         $formCommentaire = $this->createForm(CommentaireType::class, $commentaire);

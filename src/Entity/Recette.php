@@ -31,13 +31,13 @@ class Recette
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
 
-    #[ORM\ManyToOne(inversedBy: 'user_recette')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $utilisateur = null;
-
     #[ORM\ManyToMany(targetEntity: Ingredient::class, inversedBy: 'recettes')]
     #[ORM\JoinTable(name: 'recette_ingredient')]
     private $ingredients;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'recettes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $utilisateur;
 
 
     /**

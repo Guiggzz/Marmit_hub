@@ -323,7 +323,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.DJoY2iT"/>
+      <argument type="service" id=".service_locator.AP60miE"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -1615,7 +1615,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.DJoY2iT"/>
+      <argument type="service" id=".service_locator.AP60miE"/>
     </service>
     <service id="routing.resolver" class="Symfony\Component\Config\Loader\LoaderResolver">
       <call method="addLoader">
@@ -4779,11 +4779,12 @@
         <argument key="ingredient" type="service_closure" id=".errored..service_locator.XsffrLa.App\Entity\Ingredient"/>
       </argument>
     </service>
-    <service id=".service_locator.SMQnfqM" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.kDPubS7" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
-        <argument key="ingredient" type="service_closure" id=".errored..service_locator.SMQnfqM.App\Entity\Ingredient"/>
+        <argument key="ingredient" type="service_closure" id=".errored..service_locator.kDPubS7.App\Entity\Ingredient"/>
         <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+        <argument key="slugger" type="service_closure" id="slugger"/>
       </argument>
     </service>
     <service id=".service_locator.P3uOD4s" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -4828,7 +4829,7 @@
         <argument key="authenticationUtils" type="service_closure" id="security.authentication_utils"/>
       </argument>
     </service>
-    <service id=".service_locator.DJoY2iT" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.AP60miE" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
@@ -4841,7 +4842,7 @@
         <argument key="App\Controller\IngredientController::listIngredients" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\IngredientController::delete" type="service_closure" id=".service_locator.PqHNp6j"/>
         <argument key="App\Controller\IngredientController::edit" type="service_closure" id=".service_locator.XsffrLa"/>
-        <argument key="App\Controller\IngredientController::update" type="service_closure" id=".service_locator.SMQnfqM"/>
+        <argument key="App\Controller\IngredientController::update" type="service_closure" id=".service_locator.kDPubS7"/>
         <argument key="App\Controller\RecetteController::create" type="service_closure" id=".service_locator.P3uOD4s"/>
         <argument key="App\Controller\RecetteController::show" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\RecetteController::delete" type="service_closure" id=".service_locator.9kKwU2t"/>
@@ -4858,7 +4859,7 @@
         <argument key="App\Controller\IngredientController:listIngredients" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="App\Controller\IngredientController:delete" type="service_closure" id=".service_locator.PqHNp6j"/>
         <argument key="App\Controller\IngredientController:edit" type="service_closure" id=".service_locator.XsffrLa"/>
-        <argument key="App\Controller\IngredientController:update" type="service_closure" id=".service_locator.SMQnfqM"/>
+        <argument key="App\Controller\IngredientController:update" type="service_closure" id=".service_locator.kDPubS7"/>
         <argument key="App\Controller\RecetteController:create" type="service_closure" id=".service_locator.P3uOD4s"/>
         <argument key="App\Controller\RecetteController:show" type="service_closure" id=".service_locator.9kKwU2t"/>
         <argument key="App\Controller\RecetteController:delete" type="service_closure" id=".service_locator.9kKwU2t"/>
@@ -5411,8 +5412,8 @@
     <service id=".errored..service_locator.XsffrLa.App\Entity\Ingredient" class="App\Entity\Ingredient">
       <tag name="container.error" message="Cannot autowire service &quot;.service_locator.XsffrLa&quot;: it needs an instance of &quot;App\Entity\Ingredient&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
-    <service id=".errored..service_locator.SMQnfqM.App\Entity\Ingredient" class="App\Entity\Ingredient">
-      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.SMQnfqM&quot;: it needs an instance of &quot;App\Entity\Ingredient&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
+    <service id=".errored..service_locator.kDPubS7.App\Entity\Ingredient" class="App\Entity\Ingredient">
+      <tag name="container.error" message="Cannot autowire service &quot;.service_locator.kDPubS7&quot;: it needs an instance of &quot;App\Entity\Ingredient&quot; but this type has been excluded in &quot;config/services.yaml&quot;."/>
     </service>
     <service id=".console.command.about.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>about</argument>
@@ -6214,7 +6215,7 @@
     <service id="Twig\Environment" alias="twig"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.DJoY2iT"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.AP60miE"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface" alias="logger"/>
@@ -6234,7 +6235,7 @@
     <service id=".service_locator.9e2t_lq" alias=".service_locator.CsMkqUa"/>
     <service id=".service_locator.NcaBPiS" alias=".service_locator.PqHNp6j"/>
     <service id=".service_locator.05mGNNy" alias=".service_locator.XsffrLa"/>
-    <service id=".service_locator.zDUkZRk" alias=".service_locator.SMQnfqM"/>
+    <service id=".service_locator.F79hQEP" alias=".service_locator.kDPubS7"/>
     <service id=".service_locator._frJunc" alias=".service_locator.P3uOD4s"/>
     <service id=".service_locator.gaTSUXr" alias=".service_locator.9kKwU2t"/>
     <service id=".service_locator.aYm3H4c" alias=".service_locator.Sb_19oI"/>

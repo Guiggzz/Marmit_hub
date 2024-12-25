@@ -34,7 +34,7 @@
 									Modifier
 								</a>
 
-								<form action="{{ path('recette_delete', {'id': recette.id}) }}" method="post" class="mt-4">
+								<form action="{{ path('recette_delete', {'id': recette.id}) }}" method="post" class="mt-4" id="delete-form-{{ recette.id }}" onsubmit="return confirmDeletion({{ recette.id }});">
 									<input type="hidden" name="_token" value="{{ csrf_token('delete_recette_' ~ recette.id) }}">
 									<button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-400 transition">
 										Supprimer
@@ -49,4 +49,46 @@
 			{% endfor %}
 		</div>
 	</div>
+
+	<!-- Popup Modal -->
+	<div id="success-popup" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+		<div class="bg-white p-6 rounded-md shadow-lg max-w-sm mx-auto">
+			<h2 class="text-xl font-semibold text-green-600">Recette supprimée avec succès !</h2>
+			<p class="mt-4 text-gray-700">La recette a été supprimée de manière permanente.</p>
+			<button id="close-popup" class="mt-4 bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-500">
+				Fermer
+			</button>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		// Fonction pour afficher le pop-up
+function showPopup() {
+const popup = document.getElementById('success-popup');
+popup.classList.remove('hidden');
+}
+
+// Cacher le pop-up lorsqu'on clique sur le bouton
+document.getElementById('close-popup') ?. addEventListener('click', function () {
+const popup = document.getElementById('success-popup');
+popup.classList.add('hidden');
+});
+
+// Fonction pour confirmer la suppression
+function confirmDeletion(id) { // Afficher le pop-up de succès
+showPopup();
+
+// Empêcher l'envoi immédiat du formulaire
+event.preventDefault();
+
+// Soumettre le formulaire après un délai de 2 secondes
+setTimeout(() => {
+const form = document.getElementById('delete-form-' + id);
+form.submit(); // Soumettre le formulaire
+}, 2000); // Délai de 2 secondes
+}
+	</script>
 {% endblock %}

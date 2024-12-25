@@ -52,7 +52,7 @@
 				<!-- Bouton Supprimer -->
 				{% if app.user and ingredient.utilisateur == app.user and ingredient.recetteIngredients|length == 0 %}
 					<div class="mt-6">
-						<form action="{{ path('ingredient_delete', { id: ingredient.id }) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet ingrédient ?');">
+						<form action="{{ path('ingredient_delete', { id: ingredient.id }) }}" method="post" id="delete-form" onsubmit="return confirmDeletion();">
 							<input type="hidden" name="_method" value="DELETE">
 							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ingredient.id) }}">
 							<button type="submit" class="btn bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-500 transition">
@@ -71,4 +71,45 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Popup Modal -->
+	<div id="success-popup" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+		<div class="bg-white p-6 rounded-md shadow-lg max-w-sm mx-auto">
+			<h2 class="text-xl font-semibold text-green-600">Ingrédient supprimé avec succès !</h2>
+			<p class="mt-4 text-gray-700">L'ingrédient a été supprimé de manière permanente.</p>
+			<button id="close-popup" class="mt-4 bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-500">
+				Fermer
+			</button>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		// Fonction pour afficher le pop-up
+function showPopup() {
+const popup = document.getElementById('success-popup');
+popup.classList.remove('hidden');
+}
+
+// Cacher le pop-up lorsqu'on clique sur le bouton
+document.getElementById('close-popup').addEventListener('click', function () {
+const popup = document.getElementById('success-popup');
+popup.classList.add('hidden');
+});
+
+// Fonction pour confirmer la suppression
+function confirmDeletion() { // Afficher le pop-up
+showPopup();
+
+// Empêcher l'envoi immédiat du formulaire
+event.preventDefault();
+
+// Soumettre le formulaire après un délai de 2 secondes
+setTimeout(() => {
+document.getElementById('delete-form').submit(); // Soumettre le formulaire
+}, 2000); // Délai de 2 secondes
+}
+	</script>
 {% endblock %}
